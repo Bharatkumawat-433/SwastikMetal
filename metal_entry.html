@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Metal Prices</title>
+    <link rel="stylesheet" href="metal_styles.css"> </head>
+<body>
+    <div class="container">
+        <h1>Enter New Metal Price</h1>
+        <form id="metalForm">
+            <div class="input-group">
+                <label for="b1">Full Name:</label>
+                <input type="text" id="b1" name="userName" placeholder="Full Name" required>
+            </div>
+            <div class="input-group">
+                 <label for="b2">Metal Name:</label>
+                 <input id="b2" name="metalName" type="text" required>
+            </div>
+            <div class="input-group">
+                 <label for="b3">Price Rs.:</label>
+                 <input id="b3" name="price" type="number" required step="0.01">
+            </div>
+             <div class="input-group">
+                 <label for="b4">City:</label>
+                 <input id="b4" name="city" type="text" required>
+            </div>
+
+            <button type="submit" id="submitButton">Submit</button>
+            <p id="statusMessage" class="status-message"></p>
+        </form>
+
+        </div>
+
+    <script src="metal_entry.js"></script> </body>
+</html>
