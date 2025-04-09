@@ -138,7 +138,7 @@ async function handleFormSubmit(event, formType) {
                 showStatus(statusElement, result.message + " Redirecting...", false); // Update status
 
                 // Set the target path - relative path to go UP one level
-                const redirectTarget = '../index2.html';
+                const redirectTarget = 'index2.html';
                 console.log("Attempting to redirect to:", redirectTarget); // DEBUGGING
 
                 // Wait briefly before redirecting (optional)
