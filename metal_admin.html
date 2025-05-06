@@ -1,0 +1,567 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Prices - Admin</title>
+    <link rel="stylesheet" href="metal_styles.css"> </head>
+<body>
+    <div class="container">
+        <h1>Enter/Edit Metal Prices (Admin)</h1>
+        <form id="metalForm">
+            <input type="hidden" name="recordId" id="recordId" value="">
+
+            <div class="input-group">
+                <label for="b1">Full Name:</label>
+                <input type="text" id="b1" name="userName" required>
+            </div>
+            <div class="input-group">
+                <label for="b5">Mobile no. :</label>
+                <input id="phoneNameInput" name="phone" type="number" required>
+           </div>
+            <div class="input-group">
+                 <label for="b2">Metal Name:</label>
+                 <input id="b2" name="metalName" type="text" required>
+            </div>
+            <div class="input-group">
+                 <label for="b3">Price Rs.:</label>
+                 <input id="b3" name="price" type="number" required step="0.01">
+            </div>
+             <div class="input-group">
+                 <label for="b4">City:</label>
+                 <input id="b4" name="city" type="text" required>
+            </div>
+
+            <button type="submit" id="submitButton">Submit</button>
+            <p id="statusMessage" class="status-message"></p>
+        </form>
+
+        <h2>Current Metal Prices</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Name</th>
+                    <th>Mobile No.</th>
+                    <th>Metal Name</th>
+                    <th>Price Rs.</th>
+                    <th>City</th>
+                    <th>Actions</th> </tr>
+            </thead>
+            <tbody id="metalTableBody">
+                 <tr><td colspan="5" style="text-align:center;">Loading data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="metal_admin.js"></script> </body>
+</html> -->
+
+
+<!-- new 09.41 06/05/2025 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    
+  </head>
+  <style>
+    /* --- Combined Admin Page Styles (Form & Table - Hot/Dark Theme) --- */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* --- Variables (Dark Theme with Fiery Accents) --- */
+:root {
+    /* Accent Colors */
+    --accent-primary: #ff8c00; /* Dark Orange */
+    --accent-secondary: #ffae42; /* Amber */
+    --accent-hover: #ffa500; /* Brighter Orange */
+    --focus-glow: rgba(255, 140, 0, 0.25); /* Orange glow for focus */
+    --edit-button-bg: #ffc107; /* Yellow for Edit */
+    --edit-button-hover: #e0a800;
+    --delete-button-bg: #dc3545; /* Red for Delete */
+    --delete-button-hover: #c82333;
+
+    
+    /* Background Colors */
+    --bg-main-start: #1a1a1a; /* Very Dark Grey/Black */
+    --bg-main-end: #2b2b2b;   /* Dark Grey */
+    --bg-container: #2f2f2f; /* Slightly lighter container */
+    --input-bg: #383838; /* Darker input background */
+    --input-focus-bg: #404040;
+    --bg-table-header: #3a3a3a; /* Slightly darker header */
+    --bg-table-row-alt: #333333;
+    --bg-table-hover: #424242; /* Slightly lighter hover */
+
+    /* Text Colors */
+    --text-light: #e8e8e8; /* Slightly brighter light text */
+    --text-medium: #b8b8b8; /* Brighter medium grey */
+    --text-placeholder: #777;
+    --text-heading: var(--accent-secondary); /* Amber for headings */
+    --text-label: var(--text-medium);
+    --text-button: #ffffff;
+    --text-action-button: #ffffff;
+
+    /* Status Colors */
+    --success-text: #c3e6cb;
+    --success-bg: rgba(40, 167, 69, 0.25);
+    --success-border: rgba(40, 167, 69, 0.6);
+    --error-text: #f5c6cb;
+    --error-bg: rgba(220, 53, 69, 0.25);
+    --error-border: rgba(220, 53, 69, 0.6);
+
+
+    /* Border & Shadow */
+    --border-color: #484848; /* Slightly lighter dark border */
+    --border-focus: var(--accent-primary); /* Orange focus border */
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --shadow-color-light: rgba(0, 0, 0, 0.6);
+
+    /* Other */
+    --font-family: 'Poppins', sans-serif;
+    --transition-speed: 0.3s;
+    --container-radius: 15px;
+    --input-radius: 10px;
+    --button-radius: 50px; /* Pill shape */
+    --table-radius: 8px;
+}
+
+/* --- General Reset & Body --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-main-end); /* Fallback */
+    background-image: linear-gradient(135deg, var(--bg-main-start) 0%, var(--bg-main-end) 100%);
+    color: var(--text-light);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    transition: background-color var(--transition-speed) ease;
+}
+
+/* --- Container --- */
+.container {
+    background: var(--bg-container);
+    max-width: 950px; /* Keep wide for form + table */
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 50px;
+    border-radius: var(--container-radius);
+    box-shadow: 0 12px 40px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    overflow-x: auto; /* Needed for table responsiveness */
+}
+
+.container:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px var(--shadow-color-light);
+}
+
+/* --- Headings (h1 for form, h2 for table) --- */
+h1, h2 {
+    text-align: center;
+    color: var(--text-heading);
+    font-weight: 700;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
+}
+h1 {
+    margin-bottom: 40px;
+    font-size: 2rem;
+}
+h2 { /* Style for "Current Metal Prices" */
+    margin-top: 50px; /* Space above table */
+    margin-bottom: 25px;
+    font-size: 1.7rem; /* Slightly smaller than h1 */
+    border-bottom: 2px solid var(--border-color); /* Separator line */
+    padding-bottom: 10px;
+}
+
+.container:hover h1,
+.container:hover h2 {
+    color: var(--accent-hover);
+    text-shadow: 0 0 10px var(--accent-primary);
+}
+
+/* --- Form --- */
+#metalForm {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-bottom: 40px; /* Space below form */
+}
+
+/* --- Input Groups & Labels --- */
+.input-group {
+    position: relative;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--text-label);
+    font-size: 0.9rem;
+    display: block;
+    transition: color var(--transition-speed) ease;
+}
+
+/* --- Input Fields --- */
+input[type="text"],
+input[type="number"],
+input[type="tel"] {
+    width: 100%;
+    padding: 14px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--input-radius);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--input-bg);
+    transition: border-color var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease,
+                background-color var(--transition-speed) ease;
+    color: var(--text-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+input::placeholder {
+    color: var(--text-placeholder);
+    opacity: 1;
+    transition: opacity var(--transition-speed) ease;
+}
+input:focus::placeholder {
+    opacity: 0.6;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    background-color: var(--input-focus-bg);
+    box-shadow: 0 0 0 4px var(--focus-glow),
+                0 1px 3px rgba(0,0,0,0.2) inset;
+}
+
+/* --- Submit Button --- */
+#submitButton {
+    padding: 14px 35px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-button);
+    background-image: linear-gradient(to right, var(--accent-secondary) 0%, var(--accent-primary) 51%, var(--accent-secondary) 100%);
+    background-size: 200% auto;
+    border: none;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    align-self: center;
+    width: auto;
+    min-width: 200px;
+    margin-top: 15px; /* Reduced margin */
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#submitButton:hover {
+    background-position: right center;
+    box-shadow: 0 10px 25px rgba(255, 140, 0, 0.45);
+    transform: translateY(-3px);
+}
+#submitButton:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+}
+#submitButton:disabled {
+    background-image: none;
+    background-color: #555;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+}
+
+/* --- Status Message --- */
+.status-message {
+    text-align: center;
+    margin-top: 25px;
+    font-weight: 500;
+    min-height: 1.5em;
+    padding: 12px 18px;
+    border-radius: var(--input-radius);
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out 0.1s, transform 0.4s ease-in-out 0.1s, box-shadow 0.3s ease;
+    transform: translateY(5px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.status-message.success,
+.status-message.error {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.status-message.success {
+    color: var(--success-text);
+    background-color: var(--success-bg);
+    border-color: var(--success-border);
+}
+
+.status-message.error {
+    color: var(--error-text);
+    background-color: var(--error-bg);
+    border-color: var(--error-border);
+}
+
+/* --- Table Styling --- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0;
+    background-color: transparent;
+    border-radius: var(--table-radius);
+    overflow: hidden;
+}
+
+thead {
+   background-color: var(--bg-table-header);
+}
+
+th, td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    font-size: 0.95rem;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+th {
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: capitalize;
+    border-bottom-width: 2px;
+    border-color: #555;
+}
+
+th:first-child { border-top-left-radius: var(--table-radius); }
+th:last-child { border-top-right-radius: var(--table-radius); }
+
+tbody tr {
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+tbody tr:nth-child(even) td { background-color: var(--bg-table-row-alt); }
+tbody tr:nth-child(odd) td { background-color: var(--bg-container); }
+
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:last-child td:first-child { border-bottom-left-radius: var(--table-radius); }
+tbody tr:last-child td:last-child { border-bottom-right-radius: var(--table-radius); }
+
+tbody tr:hover td {
+    background-color: var(--bg-table-hover);
+    color: var(--accent-secondary); /* Amber text on ALL cells on hover */
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0,0,0,0.4) inset;
+}
+tbody tr:hover {
+    z-index: 10;
+    position: relative;
+}
+
+td {
+    color: var(--text-medium);
+}
+
+/* Style specific columns if desired */
+td:nth-child(4) { /* Price column */
+    font-weight: 500;
+    color: var(--text-light);
+}
+/* Mobile No. column - default color */
+td:nth-child(2) {
+    color: var(--text-light);
+    font-weight: 500;
+}
+/* Mobile No. column - hover color (set in general hover rule above) */
+
+
+/* --- Table Action Buttons --- */
+td:last-child { /* Target the Actions column */
+    text-align: center; /* Center buttons */
+    white-space: nowrap; /* Prevent buttons wrapping */
+}
+
+td button {
+    margin: 0 4px; /* Space between buttons */
+    padding: 6px 10px; /* Button padding */
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-action-button);
+    border: none;
+    border-radius: 6px; /* Slightly rounded buttons */
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+td button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+td button:active {
+    transform: translateY(0px);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+
+td button.edit { /* Specific class for edit button */
+    background-color: var(--edit-button-bg);
+    color: #333; /* Darker text for yellow */
+}
+td button.edit:hover {
+    background-color: var(--edit-button-hover);
+}
+
+td button.delete {
+    background-color: var(--delete-button-bg);
+}
+td button.delete:hover {
+    background-color: var(--delete-button-hover);
+}
+
+/* Loading message */
+tbody tr td[colspan="6"] { /* Updated colspan */
+    text-align: center;
+    font-style: italic;
+    color: var(--text-secondary);
+    padding: 50px 0;
+    background-color: var(--bg-container);
+    border-radius: var(--table-radius);
+}
+
+
+/* --- Responsiveness --- */
+@media (max-width: 992px) {
+    .container {
+        max-width: 100%;
+        padding: 25px 20px;
+    }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+     th, td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    h1 { font-size: 1.7rem; }
+    h2 { font-size: 1.4rem; }
+    #submitButton { width: 100%; }
+    td:last-child { text-align: right; } /* Align buttons right on smaller screens */
+}
+
+@media (max-width: 480px) {
+     th, td {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.3rem; }
+     .container {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+     input[type="text"],
+     input[type="number"],
+     input[type="tel"] {
+        padding: 12px 15px;
+        border-radius: 8px;
+     }
+     #submitButton {
+        padding: 13px 20px;
+        font-size: 1rem;
+    }
+     .status-message {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+     }
+     td button {
+         padding: 5px 8px;
+         font-size: 0.8rem;
+         margin: 0 2px;
+     }
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter/Edit Metal Prices (Admin)</h1>
+        <form id="metalForm">
+            <input type="hidden" name="recordId" id="recordId" value="">
+
+            <div class="input-group">
+                <label for="b1">Full Name:</label>
+                <input type="text" id="b1" name="userName" placeholder="Enter full name" required>
+            </div>
+            <div class="input-group">
+                <label for="phoneNameInput">Mobile no.:</label>
+                <input id="phoneNameInput" name="phone" type="tel" placeholder="Enter 10-digit mobile number" pattern="\d{10}" title="Please enter exactly 10 digits" required>
+            </div>
+            <div class="input-group">
+                 <label for="b2">Metal Name:</label>
+                 <input id="b2" name="metalName" type="text" placeholder="e.g., Copper, SS 316" required>
+            </div>
+            <div class="input-group">
+                 <label for="b3">Price Rs.:</label>
+                 <input id="b3" name="price" type="number" placeholder="Enter price per unit" required step="0.01">
+            </div>
+             <div class="input-group">
+                 <label for="b4">City:</label>
+                 <input id="b4" name="city" type="text" placeholder="Enter city name" required>
+            </div>
+
+            <button type="submit" id="submitButton">Submit</button> <p id="statusMessage" class="status-message"></p>
+        </form>
+
+        <h2>Current Metal Prices</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Your Name</th>
+                    <th>Mobile No.</th>
+                    <th>Metal Name</th>
+                    <th>Price Rs.</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="metalTableBody">
+                 <tr><td colspan="6" style="text-align:center;">Loading data...</td></tr> </tbody>
+        </table>
+    </div>
+
+    <script src="metal_admin.js"></script>
+</body>
+</html>
+
+ 

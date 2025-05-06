@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register & Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- <link rel="stylesheet" href="login.css">  -->
+
+    <style>
+      /* --- Login/Register Page Styles (Hot/Dark Theme) --- */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* --- Variables (Dark Theme with Fiery Accents) --- */
+:root {
+    /* Accent Colors */
+    --accent-primary: #ff8c00; /* Dark Orange */
+    --accent-secondary: #ffae42; /* Amber */
+    --accent-hover: #ffa500; /* Brighter Orange */
+    --focus-glow: rgba(255, 140, 0, 0.3); /* Orange glow for focus */
+    --link-color: var(--accent-secondary);
+    --link-hover: var(--accent-hover);
+
+    /* Background Colors */
+    --bg-main-start: #1f1f1f; /* Even darker start */
+    --bg-main-end: #2d2d2d;   /* Dark Grey */
+    --bg-container: #353535; /* Slightly lighter container */
+    --input-bg: #404040; /* Darker input background */
+    --input-focus-bg: #484848;
+
+    /* Text Colors */
+    --text-light: #e8e8e8;
+    --text-medium: #b8b8b8;
+    --text-placeholder: #888; /* Darker placeholder */
+    --text-heading: var(--accent-secondary); /* Amber for headings */
+    --text-label: var(--text-medium);
+    --text-button: #ffffff;
+    --text-or: #666; /* Color for 'or' separator */
+
+    /* Status Colors */
+    --success-text: #c3e6cb;
+    --success-bg: rgba(40, 167, 69, 0.25);
+    --success-border: rgba(40, 167, 69, 0.6);
+    --error-text: #f5c6cb;
+    --error-bg: rgba(220, 53, 69, 0.25);
+    --error-border: rgba(220, 53, 69, 0.6);
+
+    /* Border & Shadow */
+    --border-color: #505050; /* Darker border */
+    --border-focus: var(--accent-primary); /* Orange focus border */
+    --shadow-color: rgba(0, 0, 0, 0.5); /* Stronger shadow base */
+    --shadow-color-light: rgba(0, 0, 0, 0.7);
+
+    /* Other */
+    --font-family: 'Poppins', sans-serif;
+    --transition-speed: 0.3s;
+    --container-radius: 18px; /* Slightly more rounded */
+    --input-radius: 12px;
+    --button-radius: 50px; /* Pill shape */
+}
+
+/* --- General Reset & Body --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-main-end);
+    background-image: linear-gradient(135deg, var(--bg-main-start) 0%, var(--bg-main-end) 100%);
+    color: var(--text-light);
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center vertically */
+    min-height: 100vh;
+    padding: 20px;
+    transition: background-color var(--transition-speed) ease;
+}
+
+/* --- Container --- */
+.container {
+    background: var(--bg-container);
+    max-width: 450px; /* Suitable for login/signup */
+    width: 100%;
+    margin: 20px auto; /* Add some margin */
+    padding: 40px 45px; /* Generous padding */
+    border-radius: var(--container-radius);
+    box-shadow: 0 15px 45px var(--shadow-color); /* Strong shadow */
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    overflow: hidden;
+    position: relative; /* For potential absolute elements */
+}
+
+/* --- Heading --- */
+.form-title { /* Target specific class */
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-heading);
+    font-weight: 700;
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+    transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
+}
+.container:hover .form-title {
+    color: var(--accent-hover);
+    text-shadow: 0 0 12px var(--accent-primary);
+}
+
+/* --- Form --- */
+form { /* General form styling */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between inputs */
+}
+
+/* --- Input Groups & Labels --- */
+.input-group {
+    position: relative; /* For icon positioning */
+}
+
+.input-group i { /* Icon styling */
+    position: absolute;
+    left: 18px;
+    top: 35%;
+    transform: translateY(-50%);
+    color: var(--text-placeholder); /* Match placeholder */
+    font-size: 1rem;
+    transition: color var(--transition-speed) ease;
+    z-index: 2; /* Above input background */
+}
+
+.input-group input:focus + label + i, /* If label is after input */
+.input-group input:focus ~ i, /* If icon is after input */
+.input-group input:not(:placeholder-shown) ~ i { /* General case */
+    color: var(--accent-secondary); /* Amber icon on focus/filled */
+}
+
+
+label {
+    /* Using floating label effect - requires specific HTML order or JS */
+    /* For simplicity, we'll style it above the input */
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-label);
+    font-size: 0.85rem; /* Smaller label */
+    display: block;
+    transition: color var(--transition-speed) ease;
+}
+
+/* --- Input Fields --- */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] { /* Added email/password */
+    width: 100%;
+    padding: 15px 20px 15px 50px; /* Left padding for icon */
+    border: 1px solid var(--border-color);
+    border-radius: var(--input-radius);
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: var(--input-bg);
+    transition: border-color var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease,
+                background-color var(--transition-speed) ease;
+    color: var(--text-light);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3) inset; /* Darker inset shadow */
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input::placeholder {
+    color: var(--text-placeholder);
+    opacity: 1;
+    transition: opacity var(--transition-speed) ease;
+}
+input:focus::placeholder {
+    opacity: 0.5;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    background-color: var(--input-focus-bg);
+    box-shadow: 0 0 0 4px var(--focus-glow),
+                0 1px 3px rgba(0,0,0,0.3) inset;
+}
+
+/* --- Recover Password Link --- */
+.recover {
+    text-align: right;
+    margin-top: -10px; /* Pull up slightly */
+    margin-bottom: 15px;
+}
+.recover a {
+    color: var(--link-color);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color var(--transition-speed) ease;
+}
+.recover a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* --- Submit Button (.btn) --- */
+.btn { /* Target class used in HTML */
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-button);
+    background-image: linear-gradient(to right, var(--accent-secondary) 0%, var(--accent-primary) 51%, var(--accent-secondary) 100%);
+    background-size: 200% auto;
+    border: none;
+    border-radius: var(--button-radius);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    width: 100%; /* Full width button */
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-position: right center;
+    box-shadow: 0 10px 25px rgba(255, 140, 0, 0.45);
+    transform: translateY(-2px);
+}
+.btn:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+}
+.btn:disabled { /* If you add disabled state */
+    background-image: none;
+    background-color: #555;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.5;
+    transform: none;
+}
+
+/* --- Status Message --- */
+.status-message {
+    text-align: center;
+    margin-top: 15px; /* Space below button */
+    font-weight: 500;
+    min-height: 1.5em;
+    padding: 10px 15px;
+    border-radius: var(--input-radius);
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out 0.1s, transform 0.4s ease-in-out 0.1s, box-shadow 0.3s ease;
+    transform: translateY(5px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+.status-message.success,
+.status-message.error {
+    opacity: 1;
+    transform: translateY(0);
+}
+.status-message.success {
+    color: var(--success-text);
+    background-color: var(--success-bg);
+    border-color: var(--success-border);
+}
+.status-message.error {
+    color: var(--error-text);
+    background-color: var(--error-bg);
+    border-color: var(--error-border);
+}
+
+/* --- OR Separator --- */
+.or {
+    text-align: center;
+    margin: 25px 0;
+    color: var(--text-or);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* --- Social Icons --- */
+.icons {
+    display: flex;
+    justify-content: center;
+    gap: 25px; /* Space between icons */
+    margin-bottom: 25px;
+}
+.icons i {
+    font-size: 1.8rem; /* Larger icons */
+    color: var(--text-medium);
+    transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    cursor: pointer;
+}
+.icons i:hover {
+    color: var(--accent-secondary); /* Amber hover */
+    transform: scale(1.2); /* Scale up on hover */
+}
+.fa-google:hover { color: #DB4437; } /* Google Red */
+.fa-facebook:hover { color: #4267B2; } /* Facebook Blue */
+
+/* --- Toggle Links --- */
+.links {
+    text-align: center;
+    font-size: 0.9rem;
+}
+.links p {
+    color: var(--text-medium);
+    margin-bottom: 8px;
+}
+.links button { /* Style the toggle button */
+    background: none;
+    border: none;
+    color: var(--link-color);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: color var(--transition-speed) ease;
+    padding: 5px; /* Add padding for easier clicking */
+}
+.links button:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 480px) {
+    body { padding: 15px; }
+    .container {
+        padding: 30px 25px;
+        border-radius: 12px;
+    }
+     h1 { font-size: 1.8rem; margin-bottom: 25px; }
+     form { gap: 18px; }
+     input[type="text"],
+     input[type="email"],
+     input[type="password"],
+     input[type="tel"] {
+        padding: 12px 15px 12px 40px; /* Adjust icon padding */
+        font-size: 0.95rem;
+        border-radius: 8px;
+     }
+     .input-group i { left: 15px; font-size: 0.9rem; }
+     .btn { padding: 12px 20px; font-size: 1rem; }
+     .status-message { font-size: 0.85rem; padding: 8px 12px; }
+     .icons { gap: 20px; }
+     .icons i { font-size: 1.6rem; }
+     .links p, .links button { font-size: 0.85rem; }
+}
+
+
+    </style>
+  </head>
+<body>
+    <div class="container" id="signup" style="display:none;"> <h1 class="form-title">Register</h1>
+      <form id="signupForm" action="#" method="post">
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" name="fName" id="fName" placeholder="First Name" required>
+            <label for="fName">First Name</label> </div>
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" name="lName" id="lName" placeholder="Last Name" required>
+            <label for="lName">Last Name</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" name="email" id="signupEmail" placeholder="Email" required>
+            <label for="signupEmail">Email</label>
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="signupPassword" placeholder="Password" required>
+            <label for="signupPassword">Password</label>
+        </div>
+       <input type="submit" class="btn" value="Sign Up" name="signUp">
+       <p id="signup-status" class="status-message"></p> </form>
+      <!-- <p class="or">
+        ----------or--------
+      </p>
+      <div class="icons">
+        <i class="fab fa-google"></i>
+        <i class="fab fa-facebook"></i>
+      </div> -->
+      <div class="links">
+        <p>Already Have Account ?</p>
+        <button id="signInButton">Sign In</button>
+      </div>
+    </div>
+
+    <div class="container" id="signIn"> <h1 class="form-title">Sign In</h1>
+        <form id="signInForm" action="#" method="post">
+          <div class="input-group">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" id="signInEmail" placeholder="Email" required>
+              <label for="signInEmail">Email</label>
+          </div>
+          <div class="input-group">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="signInPassword" placeholder="Password" required>
+              <label for="signInPassword">Password</label>
+          </div>
+          <p class="recover">
+            <a href="#">Recover Password</a>
+          </p>
+         <input type="submit" class="btn" value="Sign In" name="signIn">
+         <p id="signin-status" class="status-message"></p> </form>
+        <!-- <p class="or">
+          ----------or--------
+        </p>
+        <div class="icons">
+          <i class="fab fa-google"></i>
+          <i class="fab fa-facebook"></i>
+        </div> -->
+        <div class="links">
+          <p>Don't have account yet?</p>
+          <button id="signUpButton">Sign Up</button>
+        </div>
+      </div>
+
+    <script src="login.js"></script> </body>
+</html>

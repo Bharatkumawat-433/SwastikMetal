@@ -1,0 +1,162 @@
+/* Add this to your existing styles.css */
+.status-message {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: bold;
+    min-height: 1.2em; /* Reserve space */
+}
+
+.status-message.success {
+    color: #28a745; /* Green */
+}
+
+.status-message.error {
+    color: #dc3545; /* Red */
+}
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+
+    min-height: 100vh;
+     padding: 20px; /* Add padding to body */
+}
+
+/* Container Styling */
+.container {
+    background: #fff;
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+#metalForm { /* Target form by ID */
+    margin-bottom: 30px; /* Increased margin */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Increased gap */
+}
+
+.input-group { /* Style the group */
+    display: flex;
+    flex-direction: column; 
+}
+
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+
+}
+
+input[type="text"],
+input[type="number"] { 
+    width: 100%;
+    
+    padding: 10px;
+    border: 1px solid #ccc; /* Adjusted border */
+    border-radius: 5px; /* Less rounded */
+    font-size: 1rem;
+}
+
+/* Remove specific margins for inputs */
+/* #b1, #b2, #b3, #b4 {
+   margin-left: 0;
+   margin-top: 0;
+} */
+
+
+#submitButton { 
+    padding: 12px 20px; 
+    font-size: 1.1rem; 
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center; 
+     width: 50%; 
+     margin-top: 10px; 
+}
+
+#submitButton:hover {
+    background-color: #218838;
+}
+
+#submitButton:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px; /* Increased padding */
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+td {
+    vertical-align: middle;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+}
+
+td button {
+    margin: 0 3px; /* Reduced margin */
+    background-color: #007bff;
+    border: none;
+    padding: 5px 8px; /* Adjusted padding */
+    color: white;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+td button:hover {
+    opacity: 0.8; /* Use opacity for hover */
+}
+
+td button.edit { /* Specific class for edit button */
+    background-color: #ffc107; /* Yellow */
+}
+
+td button.delete {
+    background-color: #dc3545; /* Red */
+}
+
+/* Headings */
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+}

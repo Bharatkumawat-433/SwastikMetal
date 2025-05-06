@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Metal Prices</title>
+    
+    <!-- <link rel="stylesheet" href="metal_styles.css"> </head> -->
+    <style>
+        /* --- Enhanced Metal Price Table Styles (v3: Hot/Dark Theme) --- */
+
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* --- Variables (Dark Theme with Fiery Accents) --- */
+:root {
+    /* Accent Colors */
+    --accent-primary: #ff8c00; /* Dark Orange */
+    --accent-secondary: #ffae42; /* Amber */
+    --accent-hover: #ffa500; /* Brighter Orange */
+
+    /* Background Colors */
+    --bg-main-start: #1a1a1a; /* Very Dark Grey/Black */
+    --bg-main-end: #2b2b2b;   /* Dark Grey */
+    --bg-container: #2f2f2f; /* Slightly lighter container */
+    --bg-table-header: #383838;
+    --bg-table-row-alt: #333333;
+    --bg-table-hover: #404040; /* Hover for rows */
+
+    /* Text Colors */
+    --text-light: #e0e0e0; /* Light grey for text */
+    --text-medium: #b0b0b0; /* Medium grey */
+    --text-heading: var(--accent-secondary); /* Amber for headings */
+    --text-accent: var(--accent-primary); /* Orange for specific accents */
+
+    /* Border & Shadow */
+    --border-color: #444; /* Dark border */
+    --shadow-color: rgba(0, 0, 0, 0.3); /* Darker shadow base */
+    --shadow-color-light: rgba(0, 0, 0, 0.5);
+    --glow-color: rgba(255, 140, 0, 0.15); /* Orange glow for focus */
+
+    /* Other */
+    --font-family: 'Poppins', sans-serif; /* Switched to Poppins */
+    --transition-speed: 0.3s;
+    --container-radius: 12px;
+    --table-radius: 8px;
+}
+
+/* --- General Reset & Body --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    /* Dark Gradient Background */
+    background-color: var(--bg-main-end); /* Fallback */
+    background-image: linear-gradient(135deg, var(--bg-main-start) 0%, var(--bg-main-end) 100%);
+    color: var(--text-light); /* Default text is light */
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    transition: background-color var(--transition-speed) ease;
+}
+
+/* --- Container --- */
+.container {
+    background: var(--bg-container);
+    max-width: 950px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 35px 45px;
+    border-radius: var(--container-radius);
+    /* Darker shadow */
+    box-shadow: 0 10px 35px var(--shadow-color);
+    border: 1px solid var(--border-color);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    overflow-x: auto;
+}
+
+/* Container hover */
+.container:hover {
+    transform: translateY(-5px) scale(1.01); /* Add slight scale */
+    box-shadow: 0 18px 45px var(--shadow-color-light);
+}
+
+/* --- Heading --- */
+h1 {
+    text-align: center;
+    margin-bottom: 40px; /* More space */
+    color: var(--text-heading); /* Amber heading */
+    font-weight: 700;
+    font-size: 2.1rem; /* Slightly larger */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Text shadow for depth */
+    transition: color var(--transition-speed) ease;
+}
+.container:hover h1 {
+    color: var(--accent-hover); /* Brighter orange on hover */
+}
+
+/* --- Status Message (Dark Theme) --- */
+.status-message {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 500;
+    min-height: 1.4em;
+    padding: 12px 18px;
+    border-radius: var(--table-radius); /* Match table radius */
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out 0.1s, transform 0.4s ease-in-out 0.1s, box-shadow 0.3s ease;
+    transform: translateY(5px);
+    border: 1px solid transparent;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.status-message.success,
+.status-message.error {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.status-message.success {
+    /* Green on dark */
+    color: #d1e7dd;
+    background-color: rgba(40, 167, 69, 0.2); /* Transparent green */
+    border-color: rgba(40, 167, 69, 0.5);
+}
+
+.status-message.error {
+     /* Red on dark */
+    color: #f8d7da;
+    background-color: rgba(220, 53, 69, 0.2); /* Transparent red */
+    border-color: rgba(220, 53, 69, 0.5);
+}
+
+/* --- Table Styling (Dark Theme) --- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0;
+    background-color: transparent; /* Let container bg show through */
+    border-radius: var(--table-radius);
+    overflow: hidden; /* Important for radius with separate borders */
+}
+
+thead {
+   background-color: var(--bg-table-header);
+   /* Remove gradient, use solid color */
+}
+
+th, td {
+    padding: 15px 20px; /* Adjusted padding */
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+    font-size: 0.95rem; /* Adjusted font size */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+th {
+    font-weight: 600;
+    color: var(--text-light); /* Lighter header text */
+    text-transform: capitalize;
+    border-bottom-width: 2px; /* Keep thicker line */
+    border-color: #555; /* Slightly darker border */
+}
+
+/* Apply radius to corner header cells */
+th:first-child { border-top-left-radius: var(--table-radius); }
+th:last-child { border-top-right-radius: var(--table-radius); }
+
+tbody tr {
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+/* Alternating row colors */
+tbody tr:nth-child(even) td {
+    background-color: var(--bg-table-row-alt);
+}
+tbody tr:nth-child(odd) td {
+    background-color: var(--bg-container); /* Match container bg */
+}
+
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+/* Apply radius to corner body cells */
+tbody tr:last-child td:first-child { border-bottom-left-radius: var(--table-radius); }
+tbody tr:last-child td:last-child { border-bottom-right-radius: var(--table-radius); }
+
+tbody tr:hover td { /* Apply hover style to all cells in the row */
+    background-color: var(--bg-table-hover);
+    color: var(--accent-secondary); /* ADDED: Make ALL text amber on hover */
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0,0,0,0.4) inset;
+}
+
+/* Override transform for individual cells if needed, apply to row */
+tbody tr:hover {
+    /* transform: scale(1.01); */ /* Keep row transform minimal if cell transform is used */
+    z-index: 10;
+    position: relative;
+}
+
+
+td {
+    color: var(--text-medium); /* Medium grey for standard text */
+}
+
+/* Highlight specific columns potentially */
+td:nth-child(4) { /* Example: Highlight Price column */
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+/* --- Mobile No. Column Styling --- */
+td:nth-child(2) { /* Mobile No. column */
+    /* Default state */
+    color: var(--text-light); /* CHANGED: Default to light grey/white */
+    font-weight: 500;
+}
+
+
+/* --- End Mobile No Column Styling --- */
+
+
+/* Style for the loading message */
+tbody tr td[colspan="4"] { /* Adjusted colspan if needed */
+    text-align: center;
+    font-style: italic;
+    color: var(--text-secondary);
+    padding: 50px 0;
+    background-color: var(--bg-container); /* Match container */
+    border-radius: var(--table-radius); /* Ensure radius applies */
+}
+
+
+/* --- Responsiveness for Table --- */
+@media (max-width: 992px) {
+    .container {
+        max-width: 100%;
+        padding: 25px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+     th, td {
+        padding: 12px 15px;
+        font-size: 0.9rem; /* Adjust font size */
+    }
+    h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+     th, td {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    h1 {
+        font-size: 1.6rem;
+    }
+     .container {
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+}
+
+    </style>
+    <body>
+    <div class="container">
+        <h1>Current Metal Prices</h1>
+        <p id="statusMessage" class="status-message"></p> <table>
+            <thead>
+                <tr>
+                    <th>Your Name</th>
+                    <th>Mobile No.</th>
+                    <th>Metal Name</th>
+                    <th>Price Rs.</th>
+                    <th>City</th>
+                    </tr>
+            </thead>
+            <tbody id="metalTableBody">
+                 <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr> </tbody>
+        </table>
+    </div>
+
+    <script src="metal_view.js"></script> </body>
+</html>
