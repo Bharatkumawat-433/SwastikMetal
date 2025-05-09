@@ -333,369 +333,180 @@ ul {
   color: #a8741a;
 }
 
-/* *****************Middle Header******************** */
-
+/* --- Header Middle Section Styles --- */
 .header_middel {
-  padding: 40px 0;
-  border-bottom: 1px solid #ebebeb;
+    padding: 15px 0; /* Adjusted padding for better balance */
+    border-bottom: 1px solid #ebebeb;
 }
 
 .header_black .header_middel {
-  border-bottom: 1px solid #2d2d2d;
+    border-bottom: 1px solid #2d2d2d;
+}
+
+/* This row is the main positioning context for the logo */
+.header_middel .row.align-items-center {
+    position: relative; /* Crucial for absolute positioning of the logo column */
+    min-height: 60px;   /* Ensure row has some height, adjust as needed */
+}
+
+/* --- Inquiry Section (Always Left) --- */
+.header_middel .col-lg-5 { /* Inquiry column */
+    position: static; /* Ensure it stays in the normal document flow */
+    z-index: 1;       /* Keep it below the logo if any overlap (shouldn't happen) */
+    padding-left: 15px; /* Ensure some padding from the container edge */
 }
 
 .home_contact {
-  display: flex;
+    display: flex;
+    align-items: center; /* Vertically align icon and text */
 }
 
-.home_contact .contact_box {
-  padding-right: 25px;
-  margin-right: 25px;
-  border-right: 2px solid #cccccc;
-}
-.header_black .home_contact {
-  align-items: center;
-}
-.header_black .contact_box {
-  margin-left: 15px;
+.contact_icone img {
+    height: 22px; /* Slightly smaller icon */
+    width: auto;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
+.contact_box p {
+    margin-bottom: 0;
+    font-size: 0.95rem; /* Slightly smaller font */
+    color: #333;
+}
+.contact_box p a {
+    color: #a8741a; /* Your theme color */
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.contact_box p a:hover {
+    color: #865c13; /* Darker shade for hover */
+    text-decoration: underline;
+}
+
+/* Dark theme overrides for contact */
 .header_black .contact_box p {
-  color: #a8741a;
-  font-size: 14px;
+    color: #e0e0e0;
+}
+.header_black .contact_box p a {
+     color: #ffae42; /* Lighter accent for dark theme */
+}
+.header_black .contact_box p a:hover {
+     color: #ff8c00;
 }
 
+
+/* --- Logo Section (Always Centered) --- */
+/* This is the Bootstrap column that contains the logo div */
+.header_middel .col-lg-2.col-md-3.col-4 {
+    position: absolute; /* Take out of normal flow */
+    left: 50%;          /* Position its left edge at the center of the parent row */
+    top: 50%;           /* Position its top edge at the center of the parent row */
+    transform: translate(-50%, -50%); /* Shift it back by half its own width/height */
+    width: auto !important; /* Override Bootstrap column width, let content define it */
+    padding-left: 0 !important;   /* Remove Bootstrap column padding */
+    padding-right: 0 !important;  /* Remove Bootstrap column padding */
+    z-index: 2;         /* Ensure logo is on top if any overlap */
+}
+
+/* The actual logo div */
 .logo {
-  padding: 0 20px;
+    padding: 0; /* No padding needed here */
+    text-align: center; /* Centers the <a> tag if it were inline-block */
+    width: 100%; /* Fill its parent (the absolutely positioned column) */
 }
 
-.middel_right {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.search_btn {
-  position: relative;
+.logo a {
+    display: inline-block; /* Allows centering via text-align if needed, and respects image size */
+    line-height: 0; /* Removes extra space if image is inline */
 }
 
-.search_btn:hover .dropdown_search {
-  opacity: 1;
-  visibility: visible;
-  top: 100%;
+.logo img {
+    display: block; /* Behaves like a block, good for margin:auto */
+    /* === SET MAX LOGO SIZE & MODERN SHAPE === */
+    max-width: 160px;  /* Adjust for your "latest logo size" preference */
+    width: 100%;       /* Responsive within its max-width */
+    height: auto;      /* Maintain aspect ratio */
+    margin: 0 auto;    /* Centers the image if its container is wider */
+    border-radius: 8px; /* Rounded corners for a modern look */
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12); /* Subtle shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.search_btn a {
-  width: 45px;
-  height: 45px;
-  border-radius: 3px;
-  text-align: center;
-  line-height: 45px;
-  border: 1px solid #2d2d2d;
-  color: #ffffff;
-  font-size: 20px;
-  display: block;
+.logo img:hover {
+    transform: scale(1.08); /* Slightly more pronounced hover */
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
 }
 
-.search_btn a:hover {
-  color: #a8741a;
-}
-.header_black .search_btn form button {
-  position: absolute;
-  top: 0;
-  right: 10px;
-  border: 0;
-  background: inherit;
-  color: #ffffff;
-  font-size: 20px;
-  height: 100%;
+/* --- Responsive Adjustments --- */
+
+/* For Tablets */
+@media (max-width: 991.98px) {
+    .logo img {
+        max-width: 130px; /* Slightly smaller logo on tablets */
+    }
+    .header_middel .row.align-items-center {
+        min-height: 55px; /* Adjust row height if needed */
+    }
+    .contact_box p {
+        font-size: 0.9rem;
+    }
 }
 
-.header_black .search_btn form button:hover {
-  color: #a8741a;
+/* For Mobile Phones */
+@media (max-width: 767.98px) {
+    .header_middel {
+        padding: 10px 0; /* Reduce padding on mobile */
+    }
+    .header_middel .row.align-items-center {
+        /* Row will naturally be taller due to stacked content */
+        /* No need to set min-height, let content define it */
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Inquiry Section on Mobile */
+    .header_middel .col-lg-5 {
+        width: 100%; /* Bootstrap default, but explicit */
+        text-align: left; /* Keep inquiry text left-aligned */
+        padding-left: 15px; /* Ensure padding from edge */
+        padding-right: 15px;
+        /* Add space below it for the centered logo */
+        /* The amount of margin-bottom depends on your logo height + desired spacing */
+        margin-bottom: calc(100px / 2 + 15px + 15px); /* (logo_max_height / 2) + logo_vertical_padding + desired_space */
+                                                     /* Adjust 100px if your mobile logo height is different */
+    }
+    .home_contact {
+        justify-content: flex-start; /* Align contact items to the left */
+    }
+    .contact_icone img {
+        height: 20px;
+    }
+    .contact_box p {
+        font-size: 0.85rem;
+    }
+
+    /* Logo on Mobile - it remains absolutely centered relative to the (now taller) row */
+    .logo img {
+        max-width: 100px; /* Smaller logo for mobile */
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    .logo img:hover {
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    }
 }
 
-.dropdown_search {
-  position: absolute;
-  right: 0;
-  opacity: 0;
-  visibility: hidden;
-  top: 120%;
-  transition: 0.3s;
+/* Dark theme specific logo adjustments */
+.header_black .logo img {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25); /* Darker shadow for dark bg */
+}
+.header_black .logo img:hover {
+     box-shadow: 0 7px 20px rgba(0, 0, 0, 0.35);
 }
 
-.dropdown_search form {
-  position: relative;
-  width: 280px;
-  border: 1px solid #ebebeb;
-  background: #ffffff;
-  z-index: 9;
-}
 
-.dropdown_search form input {
-  border: 0;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 67px 0 10px;
-  background: inherit;
-  font-size: 12px;
-  color: #a4a4a4;
-}
-.dropdown_search form button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: #ebebeb;
-  width: 59px;
-  height: 100%;
-  border: 0;
-  border-left: 1px solid #2d2d2d;
-  padding: 0;
-  font-size: 20px;
-  background: none;
-  color: #ffffff;
-}
 
-.header_black .dropdown_search form {
-  background: #242424;
-  border: 1px solid #2d2d2d;
-}
 
-.header_black .wishlist_btn {
-  margin-left: 18px;
-}
-
-.header_black .wishlist_btn a {
-  width: 45px;
-  height: 45px;
-  border-radius: 3px;
-  text-align: center;
-  line-height: 45px;
-  font-size: 20px;
-  display: block;
-  border: 1px solid #2d2d2d;
-  color: #ffffff;
-}
-
-.header_black .wishlist_btn a:hover {
-  color: #a8741a;
-}
-
-.cart_link {
-  margin-left: 25px;
-  position: relative;
-}
-
-.cart_link span.cart_quantity {
-  position: absolute;
-  left: -11px;
-  width: 20px;
-  line-height: 20px;
-  text-align: center;
-  background: #a8741a;
-  color: #ffffff;
-  border-radius: 50%;
-  top: 12px;
-}
-
-.cart_link > a {
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: capitalize;
-  color: #212121;
-  border: 1px solid #ebebeb;
-  padding: 11px 10px 13px 18px;
-  line-height: 15px;
-  border-radius: 3px;
-  display: block;
-}
-.cart_link > a:hover {
-  color: #a8741a;
-}
-
-.cart_link > a i.ion-android-cart {
-  font-size: 19px;
-  margin-right: 10px;
-  border-right: 1px solid #ebebeb;
-  position: relative;
-  top: 3px;
-  padding-right: 10px;
-}
-
-.cart_link > a i.ion-chevron-down {
-  font-size: 17px;
-  margin-left: 3px;
-}
-.header_black .cart_link span.cart_quantity {
-  background: #a8741a;
-}
-
-.header_black .cart_link > a {
-  color: #ffffff;
-  border: 1px solid #2d2d2d;
-}
-
-.header_black .cart_link > a:hover {
-  color: #a8741a;
-}
-
-.header_black .cart_link > a i.ion-android-cart {
-  border-right: 1px solid #2d2d2d;
-}
-
-.mini_cart {
-  position: fixed;
-  min-width: 355px;
-  height: 100%;
-  padding: 18px 20px 33px;
-  background: #ffffff;
-  z-index: 999;
-  right: 0;
-  top: 0;
-  transition: 0.5s;
-  transform: translateX(100%);
-}
-
-.mini_cart.active {
-  transform: translateX(0);
-  transition: 0.5s;
-}
-
-.header_black .mini_cart {
-  background: #242424;
-  border: 1px solid #2d2d2d;
-}
-
-.cart_close {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #ebebeb;
-  padding-bottom: 10px;
-}
-
-.header_black .cart_close {
-  border-bottom: 1px solid #2d2d2d;
-}
-
-.cart_text h3 {
-  font-size: 18px;
-  text-transform: capitalize;
-  font-weight: 600;
-  margin-bottom: 0;
-  color: #ffffff;
-}
-
-.mini_cart_close > a {
-  font-size: 25px;
-  color: #ffffff;
-}
-
-.mini_cart_close > a:hover {
-  color: #a8741a;
-}
-
-.cart_item {
-  padding: 20px 0;
-  border-bottom: 1px solid #2d2d2d;
-  display: flex;
-  overflow: hidden;
-}
-
-.cart_img {
-  width: 100px;
-  margin-right: 10px;
-}
-
-.cart_info {
-  width: 58%;
-}
-
-.cart_info a {
-  font-weight: 400;
-  color: #ffffff;
-  text-transform: capitalize;
-  font-size: 14px;
-}
-
-.cart_info a:hover {
-  color: #a8741a;
-}
-
-.cart_info span {
-  display: block;
-}
-
-.cart_info span.price_cart {
-  color: #a8741a;
-  font-weight: 500;
-}
-
-.header_black .cart_info span.quantity {
-  color: #a0a0a0;
-}
-
-.cart_remove {
-  width: 10%;
-  text-align: right;
-}
-
-.cart_remove a {
-  color: #eaeaea;
-  font-size: 18px;
-}
-
-.cart_remove a:hover {
-  color: #a8741a;
-}
-
-.cart_total {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 0;
-}
-
-.cart_total span {
-  color: #ffffff;
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.mini_cart_footer {
-  padding: 0 25px 25px;
-  background: #242424;
-}
-
-.cart_button a {
-  text-transform: uppercase;
-  border-radius: 5px;
-  font-weight: 400;
-  color: #ffffff;
-  background: #2e2e2e;
-  display: block;
-  text-align: center;
-  line-height: 20px;
-  margin-bottom: 0;
-  padding: 13px 0 11px;
-}
-
-.cart_button a:hover {
-  background: #a8741a;
-}
-
-.cart_button.view_cart {
-  padding-bottom: 15px;
-}
-
-.cart_button a.active {
-  background: #a8741a;
-}
-
-.cart_button a.active:hover {
-  background: #e9c88f;
-  color: #000000;
-  font-weight: 600;
-}
 
 /* ************************ Header Down ( 3rd ) ******************** */
 
@@ -1025,6 +836,7 @@ display: block; /* Show on hover */
   overflow: hidden;   /* Already present, keep it */
   display: block;     /* Add display block */
   width: 100%;      /* Ensure it fills the column width */
+  margin-top: 8px;
 
   /* === ASPECT RATIO FIX === */
   padding-top: 75%; /* Example: 4:3 ratio. Use 100% for square, 56.25% for 16:9 etc. */
@@ -1035,7 +847,7 @@ display: block; /* Show on hover */
 /* Style the image inside the container */
 .scrap_name a img { /* Target the image inside the link */
   position: absolute; /* Position relative to .scrap_name */
-  top: 0;
+  top: 0%;
   left: 0;
   width: 100%;
   height: 100%;     /* Force height to fill container, overrides height: auto */
@@ -1123,6 +935,80 @@ display: block; /* Show on hover */
 
 /* ******************** product section    11.50 05/05/2025 ****************** */
 /* === START: Corrected Product CSS Code === */
+
+
+/* --- Add this block to your existing CSS for Responsive Product Tabs --- */
+
+@media (max-width: 768px) { /* Apply styles for screens 768px wide or smaller */
+
+  .product_tab_button ul.nav {
+      display: flex;         /* Use flexbox for better control */
+      flex-wrap: wrap;       /* Allow items to wrap to the next line */
+      justify-content: center; /* Center the wrapped items */
+      border: none;          /* Remove the main border */
+      padding: 0 10px;       /* Add some horizontal padding */
+  }
+
+  /* Hide the decorative side lines on small screens */
+  .product_tab_button ul.nav::before,
+  .product_tab_button ul.nav::after {
+      display: none;
+  }
+
+  .product_tab_button ul li {
+      display: block;       /* Make each list item take full width available in its flex line */
+      width: auto;          /* Allow width to be determined by content */
+      margin-bottom: 10px;  /* Add space between wrapped/stacked buttons */
+  }
+
+   /* Remove the left border between buttons when wrapped/stacked */
+  .product_tab_button ul li a,
+  .product_black_section .product_tab_button ul.nav li a {
+      border-left: none;
+      padding: 0 15px;      /* Adjust padding */
+      font-size: 16px;      /* Slightly smaller font */
+      line-height: 40px;    /* Adjust line height */
+      border: 1px solid #444; /* Add border to individual buttons */
+      border-radius: 5px;   /* Add rounding to individual buttons */
+      margin: 0 5px;        /* Add small horizontal margin */
+  }
+
+  /* Adjust active state indicator */
+  .product_tab_button ul li a.active::before {
+     /* Keep the border, but adjust size/position slightly if needed */
+     /* Or change the active indicator entirely */
+     border-width: 2px;
+     width: 100%; /* Make border fit the button */
+     height: 100%;
+     left: 0;
+     top: 0;
+     border-radius: 5px; /* Match button rounding */
+     border-color: #a8741a; /* Keep active color */
+  }
+
+   /* Ensure hover/active colors are still applied */
+   .product_black_section .product_tab_button ul.nav li a:hover,
+   .product_black_section .product_tab_button ul.nav li a.active {
+      color: #a8741a;
+      background-color: rgba(168, 116, 26, 0.1); /* Optional: Subtle background for active/hover */
+   }
+
+}
+
+@media (max-width: 480px) { /* Further adjustments for very small screens */
+  .product_tab_button ul li a,
+  .product_black_section .product_tab_button ul.nav li a {
+      font-size: 14px;      /* Even smaller font */
+      padding: 0 10px;      /* Less padding */
+      line-height: 36px;    /* Adjust line height */
+      margin: 0 3px;
+  }
+}
+
+/* --- End of Responsive Product Tab Button CSS --- */
+
+
+
 
 .product_section {
   margin-bottom: 34px;
@@ -1916,13 +1802,17 @@ display: block; /* Show on hover */
 }
 
 /* ***********************subscribe *********** */
+
+
+/* --- Newsletter Area Styles --- */
+
 .newsletter_area {
-  border-bottom: 1px solid #ebebeb;
+  /* border-bottom: 1px solid #ebebeb; */ /* Assuming light theme */
   padding-bottom: 70px;
   margin-bottom: 65px;
 }
 
-.newsletter_black {
+.newsletter_black { /* Styles specific to the dark theme */
   border-bottom: 0;
   padding-bottom: 0;
   margin-bottom: 70px;
@@ -1930,61 +1820,108 @@ display: block; /* Show on hover */
 
 .newsletter_black h2 {
   color: #ffffff;
-  font-family: serif;
+  font-family: serif; /* Consider using 'Poppins' for consistency */
   font-weight: 700;
-  font-size: 35px;
-  letter-spacing: 2px;
-  line-height: 32px;
-}
-.newsletter_black p {
-  color: #a0a0a0;
-  line-height: 26px;
-  margin-bottom: 37px;
-}
-.newsletter_black .newsletter_content form {
-  width: inherit;
-  position: unset;
-  display: flex;
-  justify-content: center;
-  width: 600px;
-  position: relative;
-  margin: 0 auto;
-  margin-bottom: 20px;
+  font-size: 30px; /* Slightly reduced size */
+  letter-spacing: 1px; /* Reduced spacing */
+  line-height: 1.3; /* Improved line height */
+  margin-bottom: 15px; /* Reduced margin */
 }
 
-.newsletter_black .newsletter_content form input {
-  width: 100%;
-  border: 2px solid #2d2d2d;
-  font-size: 12px;
-  color: #fff;
-  padding: 0 20px;
-  border-radius: 4px;
-  padding: 10px 224px 10px 20px;
-  background: none;
+.newsletter_black p {
+  color: #b0b0b0; /* Slightly lighter grey */
+  line-height: 1.7; /* Improved line height */
+  margin-bottom: 30px; /* Reduced margin */
+  max-width: 500px; /* Limit paragraph width */
+  margin-left: auto;
+  margin-right: auto;
 }
-.newsletter_black .newsletter_content form button {
-  position: absolute;
-  font-family: "Poppins", serif;
-  content: "";
-  right: 0;
-  top: 0;
-  font-size: 16px;
-  font-weight: 500;
+
+.newsletter_content {
   text-align: center;
-  padding: 0 60px;
-  background: #a8741a;
+}
+
+/* --- Form Styling (Responsive Flexbox) --- */
+.newsletter_black .newsletter_content form,
+.footer-newsletter { /* Target form */
+  display: flex; /* Use flexbox */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  justify-content: center;
+  max-width: 600px; /* Limit max width on large screens */
+  width: 95%; /* Use percentage width for responsiveness */
+  margin: 0 auto 20px auto; /* Center form, add bottom margin */
+  position: relative; /* Keep relative for potential future use, but not needed for button */
+  gap: 0; /* No gap initially, handled by border-radius */
+}
+
+.newsletter_black .newsletter_content form input[type="email"] {
+  flex-grow: 1; /* Allow input to take available space */
+  min-width: 200px; /* Minimum width before wrapping */
+  border: 2px solid #444; /* Slightly lighter border */
+  font-size: 1rem; /* Increased font size */
   color: #fff;
-  height: 100%;
-  border: 0;
-  border-radius: 4px;
+  padding: 12px 20px; /* Adjusted padding (removed large right padding) */
+  background: none;
+  /* Adjust border-radius for joining with button */
+  border-radius: 6px 0 0 6px; /* Rounded left corners */
+  height: 50px; /* Explicit height */
+  box-sizing: border-box; /* Include padding/border in height/width */
+  transition: border-color var(--transition-speed, 0.3s) ease;
+}
+.newsletter_black .newsletter_content form input[type="email"]:focus {
+   outline: none;
+   border-color: var(--accent-primary, #ff8c00); /* Use theme variable if available */
+}
+
+
+.newsletter_black .newsletter_content form button {
+  /* Remove absolute positioning */
+  /* position: absolute; */
+  /* right: 0; */
+  /* top: 0; */
+
+  font-family: "Poppins", sans-serif; /* Consistent font */
+  font-size: 1rem; /* Consistent font size */
+  font-weight: 600; /* Bolder */
+  text-align: center;
+  padding: 0 30px; /* Adjusted padding */
+  background: var(--accent-primary, #ff8c00); /* Use theme variable or fallback */
+  color: #fff;
+  height: 50px; /* Match input height */
+  border: none; /* Remove default border */
+  /* Adjust border-radius for joining with input */
+  border-radius: 0 6px 6px 0; /* Rounded right corners */
   text-transform: capitalize;
+  cursor: pointer;
+  white-space: nowrap; /* Prevent button text wrapping */
+  transition: background-color var(--transition-speed, 0.3s) ease, color var(--transition-speed, 0.3s) ease;
+  box-sizing: border-box;
 }
 
 .newsletter_black .newsletter_content form button:hover {
-  color: #000;
+  background: var(--accent-hover, #ffa500); /* Use theme variable or fallback */
+  color: #111; /* Darker text on hover */
 }
-.newsletter_content {
-  text-align: center;
+
+/* --- Media Query for Smaller Screens --- */
+@media (max-width: 600px) {
+  .newsletter_black .newsletter_content form,
+  .footer-newsletter {
+      flex-direction: column; /* Stack elements vertically */
+      width: 90%; /* Adjust width */
+      gap: 10px; /* Add gap between stacked elements */
+  }
+
+  .newsletter_black .newsletter_content form input[type="email"] {
+      border-radius: 6px; /* Full radius when stacked */
+      width: 100%; /* Full width */
+      text-align: center; /* Center placeholder */
+  }
+
+  .newsletter_black .newsletter_content form button {
+      border-radius: 6px; /* Full radius when stacked */
+      width: 100%; /* Full width */
+  }
 }
 
 /* ****************metal section ************** */
