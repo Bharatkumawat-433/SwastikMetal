@@ -1,47 +1,48 @@
+
+// // new 10.24  06/05/2025
+
+
+
 // // File: script.js
 // // Location: TRAIL/login all file/script.js
+// // Updated with Role-Based Redirect Logic for Single Admin/User
 
 // // --- Configuration ---
-// // IMPORTANT: Replace this with your actual Google Apps Script Web App URL
-// const googleScriptURL = 'https://script.google.com/macros/s/AKfycbyLi_ySkYuN8mY2v2x_laBteryQ6bHfMRETdlOVqIJYyNS19GNrnChjIdMg3PFIuzd3/exec'; // <-- PASTE YOUR DEPLOYED URL HERE
+// const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwUWkbpD51Sf28PAq80Pqv0yANgf6t1UCl7J61xBeR3EGhP43YHe2ujtQVkr9c7iH7g/exec'; // <-- PASTE YOUR DEPLOYED URL HERE
 
 // // --- Element Selection ---
-// const signInForm = document.getElementById('signIn'); // The sign-in container div
-// const signUpForm = document.getElementById('signup'); // The sign-up container div
-// const signInBtn = document.getElementById('signInButton'); // Button to switch to Sign In view
-// const signUpBtn = document.getElementById('signUpButton'); // Button to switch to Sign Up view
-// const actualSignInForm = document.getElementById('signInForm'); // The <form> element for sign in
-// const actualSignUpForm = document.getElementById('signupForm'); // The <form> element for sign up
-// const signupStatus = document.getElementById('signup-status'); // <p> tag for signup messages
-// const signinStatus = document.getElementById('signin-status'); // <p> tag for signin messages
-// const signupSubmitBtn = actualSignUpForm.querySelector('input[type="submit"]'); // Signup submit button
-// const signinSubmitBtn = actualSignInForm.querySelector('input[type="submit"]'); // Signin submit button
+// const signInFormDiv = document.getElementById('signIn');
+// const signUpFormDiv = document.getElementById('signup');
+// const signInBtn = document.getElementById('signInButton');
+// const signUpBtn = document.getElementById('signUpButton');
+// const actualSignInForm = document.getElementById('signInForm');
+// const actualSignUpForm = document.getElementById('signupForm');
+// const signupStatus = document.getElementById('signup-status');
+// const signinStatus = document.getElementById('signin-status');
+// const signupSubmitBtn = actualSignUpForm.querySelector('input[type="submit"]');
+// const signinSubmitBtn = actualSignInForm.querySelector('input[type="submit"]');
 
 // // --- Functions ---
 
-// // Function to show the Sign Up form and hide Sign In
 // function showSignUp() {
-//     signInForm.style.display = 'none';
-//     signUpForm.style.display = 'block'; // Or 'flex' if needed for layout
+//     signInFormDiv.style.display = 'none';
+//     signUpFormDiv.style.display = 'block';
 //     clearStatusMessages();
 // }
 
-// // Function to show the Sign In form and hide Sign Up
 // function showSignIn() {
-//     signUpForm.style.display = 'none';
-//     signInForm.style.display = 'block'; // Or 'flex'
+//     signUpFormDiv.style.display = 'none';
+//     signInFormDiv.style.display = 'block';
 //     clearStatusMessages();
 // }
 
-// // Function to clear status messages from both forms
 // function clearStatusMessages() {
 //     signupStatus.textContent = '';
-//     signupStatus.className = 'status-message'; // Reset class
+//     signupStatus.className = 'status-message';
 //     signinStatus.textContent = '';
-//     signinStatus.className = 'status-message'; // Reset class
+//     signinStatus.className = 'status-message';
 // }
 
-// // Function to display status messages (success or error)
 // function showStatus(element, message, isError = false) {
 //     element.textContent = message;
 //     element.className = isError ? 'status-message error' : 'status-message success';
@@ -49,21 +50,21 @@
 
 // // --- Main Function to Handle Form Submissions ---
 // async function handleFormSubmit(event, formType) {
-//     event.preventDefault(); // Stop browser's default form submission
-//     clearStatusMessages(); // Clear any previous messages
+//     event.preventDefault();
+//     clearStatusMessages();
 
-//     let formData = {}; // Object to hold form data
-//     let statusElement; // Element to display messages (<p> tag)
-//     let submitButton; // The submit button element
-//     let formElement; // The <form> element itself
+//     let formData = {};
+//     let statusElement;
+//     let submitButton;
+//     let formElement;
+//     let result = null;
 
-//     // --- Collect Form Data based on 'signup' or 'signin' ---
 //     if (formType === 'signup') {
 //         formData = {
-//             action: 'signup', // Action for Apps Script
-//             fName: document.getElementById('fName').value,
-//             lName: document.getElementById('lName').value,
-//             email: document.getElementById('signupEmail').value,
+//             action: 'signup',
+//             fName: document.getElementById('fName').value.trim(),
+//             lName: document.getElementById('lName').value.trim(),
+//             email: document.getElementById('signupEmail').value.trim(),
 //             password: document.getElementById('signupPassword').value,
 //         };
 //         statusElement = signupStatus;
@@ -71,165 +72,166 @@
 //         formElement = actualSignUpForm;
 //     } else if (formType === 'signin') {
 //         formData = {
-//             action: 'signin', // Action for Apps Script
-//             email: document.getElementById('signInEmail').value,
+//             action: 'signin',
+//             email: document.getElementById('signInEmail').value.trim(),
 //             password: document.getElementById('signInPassword').value,
 //         };
 //         statusElement = signinStatus;
 //         submitButton = signinSubmitBtn;
 //         formElement = actualSignInForm;
 //     } else {
-//         console.error("Invalid form type passed to handleFormSubmit");
-//         return; // Exit if formType is unknown
+//         console.error("Invalid form type");
+//         return;
 //     }
 
-//     // --- Basic Client-Side Validation ---
+//     // Basic Client-Side Validation
 //     for (const key in formData) {
-//         // Check if any field (except 'action') is empty
 //         if (key !== 'action' && !formData[key]) {
 //              showStatus(statusElement, `Please fill in all required fields.`, true);
-//              return; // Stop submission if validation fails
+//              return;
 //         }
 //     }
 
-//     // Disable submit button and show processing message
 //     submitButton.disabled = true;
 //     showStatus(statusElement, 'Processing...', false);
 
 //     try {
-//         // --- Prepare data for Apps Script (e.parameter requires URL-encoded) ---
 //         const encodedData = new URLSearchParams(formData).toString();
-//         console.log("Sending data:", encodedData); // DEBUGGING: See what's being sent
+//         console.log("Sending data:", encodedData);
 
-//         // --- Fetch Request to Google Apps Script ---
 //         const response = await fetch(googleScriptURL, {
 //             method: 'POST',
-//             headers: {
-//                 // Important: Set Content-Type for URL-encoded data
-//                 'Content-Type': 'application/x-www-form-urlencoded',
-//             },
-//             body: encodedData, // Send the encoded string
+//             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+//             body: encodedData,
 //         });
 
-//         // --- Handle Network Response ---
 //          if (!response.ok) {
-//              // Attempt to get error details from the response body if available
 //              let errorText = `Network error! Status: ${response.status} ${response.statusText}`;
 //               try {
-//                   const errorData = await response.json(); // Try parsing server error message
+//                   const errorData = await response.json();
 //                   errorText = errorData.message || errorData.error || errorText;
-//               } catch (e) {
-//                    console.warn("Could not parse error response as JSON."); // Response might not be JSON
-//               }
-//               throw new Error(errorText); // Throw error to be caught below
+//               } catch (e) { console.warn("Could not parse error response as JSON."); }
+//               throw new Error(errorText);
 //          }
 
-//         // --- Handle Application Response (JSON from Apps Script) ---
-//         const result = await response.json(); // Parse the JSON response from Apps Script
+//         result = await response.json();
 
 //         if (result.status === 'success') {
-//             // --- SUCCESS ---
-//             console.log("Login successful 😊 ", result); // DEBUGGING
-//             showStatus(statusElement, result.message, false); // Show success message from Apps Script
-//             formElement.reset(); // Clear the form fields
+//             console.log(`${formType} successful: `, result);
+//             showStatus(statusElement, result.message, false);
+//             formElement.reset();
 
-//             // --- REDIRECT LOGIC (Only for Sign In) ---
+//             // --- ROLE-BASED REDIRECT LOGIC (Only for Sign In) ---
 //             if (formType === 'signin') {
-//                 showStatus(statusElement, result.message + " Redirecting...", false); // Update status
+//                 showStatus(statusElement, result.message + " Redirecting...", false);
 
-//                 // Set the target path - relative path to go UP one level
-//                 const redirectTarget = '../index2.html';
-//                 console.log("Attempting to redirect to:", redirectTarget); // DEBUGGING
+//                 let redirectTarget = '';
 
-//                 // Wait briefly before redirecting (optional)
+//                 // --- CHECK USER ROLE from Apps Script response ---
+//                 // Apps Script now sends role: 'admin' or role: 'user'
+//                 if (result.role && result.role === 'admin') {
+//                     // Redirect Admin
+//                     redirectTarget = 'index3_admin.html'; // <<< Your Admin Page Path
+//                     console.log("Admin login detected. Redirecting to:", redirectTarget);
+//                 } else {
+//                     // Redirect Normal User
+//                     redirectTarget = 'index2.html'; // <<< Your Normal User Page Path
+//                     console.log("Normal user login detected. Redirecting to:", redirectTarget);
+//                 }
+//                 // --- END ROLE CHECK ---
+
+//                 // Redirect after a delay
 //                 setTimeout(() => {
-//                     window.location.href = redirectTarget; // Perform the redirect
-//                 }, 1500); // 1500 milliseconds = 1.5 seconds delay
+//                     if (redirectTarget) {
+//                         window.location.href = redirectTarget;
+//                     } else {
+//                          console.error("Redirect target not set! Check Apps Script response includes 'role'.");
+//                          showStatus(statusElement, "Login successful, but redirect failed (role missing?).", true);
+//                          submitButton.disabled = false;
+//                     }
+//                 }, 1000); // 1.5 seconds delay
 //             }
-//             // --- END REDIRECT LOGIC ---
+//             // --- END ROLE-BASED REDIRECT LOGIC ---
 
 //         } else {
-//             // --- FAILURE (Reported by Apps Script) ---
-//              console.log("Login failed according to script result:", result); // DEBUGGING
+//              console.log(`${formType} failed according to script result:`, result);
 //              showStatus(statusElement, result.message || 'An unknown error occurred.', true);
 //         }
 
 //     } catch (error) {
-//          // --- CATCH FETCH/NETWORK ERRORS ---
-//          console.error('Error during fetch or response handling:', error); // DEBUGGING
+//          console.error(`Error during ${formType} or response handling:`, error);
 //          showStatus(statusElement, `Error: ${error.message || 'Could not connect.'}`, true);
 //     } finally {
-//          // --- ALWAYS RE-ENABLE BUTTON ---
-//          submitButton.disabled = false; // Re-enable the submit button
+//          const isSuccessfulSigninRedirect = (formType === 'signin' && result && result.status === 'success');
+//          if (!isSuccessfulSigninRedirect) {
+//               submitButton.disabled = false;
+//          }
 //     }
 // } // --- End of handleFormSubmit Function ---
 
 // // --- Event Listeners ---
-
-// // Listener for the button that switches view TO Sign In
 // signInBtn.addEventListener('click', showSignIn);
-
-// // Listener for the button that switches view TO Sign Up
 // signUpBtn.addEventListener('click', showSignUp);
-
-// // Listener for the Sign Up form submission
 // actualSignUpForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signup'));
-
-// // Listener for the Sign In form submission
 // actualSignInForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signin'));
 
+// // --- Initial State ---
 // showSignIn();
 
-// console.log("Login/Signup script loaded."); // DEBUGGING: Confirm script execution
+// console.log("Login/Signup script loaded (with final role redirect).");
 
 
-// new 10.24  06/05/2025
+// new 19.31 09/05/2025
 
-
-
-// File: script.js
-// Location: TRAIL/login all file/script.js
-// Updated with Role-Based Redirect Logic for Single Admin/User
+// Client-Side JavaScript for your Login Page (e.g., in login.html)
 
 // --- Configuration ---
-const googleScriptURL = 'https://script.google.com/macros/s/AKfycbwUWkbpD51Sf28PAq80Pqv0yANgf6t1UCl7J61xBeR3EGhP43YHe2ujtQVkr9c7iH7g/exec'; // <-- PASTE YOUR DEPLOYED URL HERE
+// IMPORTANT: Replace this with your ACTUAL deployed Google Apps Script Web App URL
+const googleScriptURL = 'https://script.google.com/macros/s/AKfycbx7cXeijOmX5t_wr1FY48s-XCjoiECRc0EN_6CNPZJ8zMUCqSnzdLCuCpsc9cMUXwFx/exec';
 
-// --- Element Selection ---
-const signInFormDiv = document.getElementById('signIn');
-const signUpFormDiv = document.getElementById('signup');
-const signInBtn = document.getElementById('signInButton');
-const signUpBtn = document.getElementById('signUpButton');
-const actualSignInForm = document.getElementById('signInForm');
-const actualSignUpForm = document.getElementById('signupForm');
-const signupStatus = document.getElementById('signup-status');
-const signinStatus = document.getElementById('signin-status');
-const signupSubmitBtn = actualSignUpForm.querySelector('input[type="submit"]');
-const signinSubmitBtn = actualSignInForm.querySelector('input[type="submit"]');
+// --- Element Selection (ensure these IDs match your HTML form elements) ---
+const signInFormDiv = document.getElementById('signIn'); // The div containing the sign-in form
+const signUpFormDiv = document.getElementById('signup'); // The div containing the sign-up form
+const signInBtn = document.getElementById('signInButton'); // Button to show sign-in form
+const signUpBtn = document.getElementById('signUpButton'); // Button to show sign-up form
+const actualSignInForm = document.getElementById('signInForm'); // The <form> element for sign-in
+const actualSignUpForm = document.getElementById('signupForm'); // The <form> element for sign-up
+const signupStatus = document.getElementById('signup-status'); // <p> or <div> to show signup messages
+const signinStatus = document.getElementById('signin-status'); // <p> or <div> to show signin messages
+const signupSubmitBtn = actualSignUpForm.querySelector('input[type="submit"]'); // Submit button for signup
+const signinSubmitBtn = actualSignInForm.querySelector('input[type="submit"]'); // Submit button for signin
 
-// --- Functions ---
-
+// --- UI Functions ---
 function showSignUp() {
-    signInFormDiv.style.display = 'none';
-    signUpFormDiv.style.display = 'block';
+    if (signInFormDiv) signInFormDiv.style.display = 'none';
+    if (signUpFormDiv) signUpFormDiv.style.display = 'block';
     clearStatusMessages();
 }
 
 function showSignIn() {
-    signUpFormDiv.style.display = 'none';
-    signInFormDiv.style.display = 'block';
+    if (signUpFormDiv) signUpFormDiv.style.display = 'none';
+    if (signInFormDiv) signInFormDiv.style.display = 'block';
     clearStatusMessages();
 }
 
 function clearStatusMessages() {
-    signupStatus.textContent = '';
-    signupStatus.className = 'status-message';
-    signinStatus.textContent = '';
-    signinStatus.className = 'status-message';
+    if (signupStatus) {
+        signupStatus.textContent = '';
+        signupStatus.className = 'status-message'; // Reset class
+    }
+    if (signinStatus) {
+        signinStatus.textContent = '';
+        signinStatus.className = 'status-message'; // Reset class
+    }
 }
 
 function showStatus(element, message, isError = false) {
-    element.textContent = message;
-    element.className = isError ? 'status-message error' : 'status-message success';
+    if (element) {
+        element.textContent = message;
+        element.className = isError ? 'status-message error' : 'status-message success';
+    } else {
+        console.warn("Status element not found for message:", message);
+    }
 }
 
 // --- Main Function to Handle Form Submissions ---
@@ -264,102 +266,110 @@ async function handleFormSubmit(event, formType) {
         submitButton = signinSubmitBtn;
         formElement = actualSignInForm;
     } else {
-        console.error("Invalid form type");
+        console.error("Invalid form type specified for handleFormSubmit");
         return;
     }
 
     // Basic Client-Side Validation
     for (const key in formData) {
-        if (key !== 'action' && !formData[key]) {
-             showStatus(statusElement, `Please fill in all required fields.`, true);
-             return;
+        if (key !== 'action' && typeof formData[key] === 'string' && !formData[key]) {
+            showStatus(statusElement, `Please fill in all required fields. '${key}' is missing.`, true);
+            return;
         }
     }
+    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
+         showStatus(statusElement, 'Please enter a valid email address.', true);
+         return;
+    }
+    if (formData.password && formData.password.length < 6) {
+         showStatus(statusElement, 'Password must be at least 6 characters.', true);
+         return;
+    }
+
 
     submitButton.disabled = true;
     showStatus(statusElement, 'Processing...', false);
 
     try {
         const encodedData = new URLSearchParams(formData).toString();
-        console.log("Sending data:", encodedData);
+        console.log("Sending data to Apps Script:", encodedData);
 
         const response = await fetch(googleScriptURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: encodedData,
+            mode: 'cors' // Required if your HTML is on a different domain than script.google.com initially, though Apps Script handles this with redirects for web apps.
         });
 
-         if (!response.ok) {
-             let errorText = `Network error! Status: ${response.status} ${response.statusText}`;
-              try {
-                  const errorData = await response.json();
-                  errorText = errorData.message || errorData.error || errorText;
-              } catch (e) { console.warn("Could not parse error response as JSON."); }
-              throw new Error(errorText);
-         }
+        if (!response.ok) {
+            let errorText = `Network error! Status: ${response.status} ${response.statusText}`;
+            try {
+                const errorData = await response.json();
+                errorText = errorData.message || errorData.error || `Server error (Status ${response.status}).`;
+            } catch (e) {
+                console.warn("Could not parse error response as JSON. Raw response:", await response.text());
+            }
+            throw new Error(errorText);
+        }
 
         result = await response.json();
+        console.log("Received result from Apps Script:", result);
 
         if (result.status === 'success') {
-            console.log(`${formType} successful: `, result);
             showStatus(statusElement, result.message, false);
-            formElement.reset();
+            if (formElement) formElement.reset();
 
-            // --- ROLE-BASED REDIRECT LOGIC (Only for Sign In) ---
-            if (formType === 'signin') {
+            if (formType === 'signin' && result.sessionId) {
+                localStorage.setItem('myAppSessionId', result.sessionId);
+                localStorage.setItem('myAppUserRole', result.role); // Store role
+                localStorage.setItem('myAppUserFirstName', result.user ? result.user.firstName : ''); // Store name
+
                 showStatus(statusElement, result.message + " Redirecting...", false);
-
                 let redirectTarget = '';
-
-                // --- CHECK USER ROLE from Apps Script response ---
-                // Apps Script now sends role: 'admin' or role: 'user'
-                if (result.role && result.role === 'admin') {
-                    // Redirect Admin
-                    redirectTarget = 'index3_admin.html'; // <<< Your Admin Page Path
-                    console.log("Admin login detected. Redirecting to:", redirectTarget);
+                if (result.role === 'admin') {
+                    redirectTarget = 'index3_admin.html'; // Your Admin Page
                 } else {
-                    // Redirect Normal User
-                    redirectTarget = 'index2.html'; // <<< Your Normal User Page Path
-                    console.log("Normal user login detected. Redirecting to:", redirectTarget);
+                    redirectTarget = 'index2.html'; // Your Normal User Page
                 }
-                // --- END ROLE CHECK ---
 
-                // Redirect after a delay
                 setTimeout(() => {
                     if (redirectTarget) {
                         window.location.href = redirectTarget;
                     } else {
-                         console.error("Redirect target not set! Check Apps Script response includes 'role'.");
-                         showStatus(statusElement, "Login successful, but redirect failed (role missing?).", true);
-                         submitButton.disabled = false;
+                        console.error("Redirect target not set! Check Apps Script response includes 'role'.");
+                        showStatus(statusElement, "Login successful, but redirect failed (role missing?).", true);
+                        if(submitButton) submitButton.disabled = false;
                     }
-                }, 1000); // 1.5 seconds delay
+                }, 1000); // Delay for user to see message
+            } else if (formType === 'signin' && !result.sessionId) {
+                // Signin reported success from script but no session ID was returned
+                console.error("Signin success from script, but no sessionId returned.");
+                showStatus(statusElement, "Login successful, but session could not be established. Please try again.", true);
             }
-            // --- END ROLE-BASED REDIRECT LOGIC ---
-
         } else {
-             console.log(`${formType} failed according to script result:`, result);
-             showStatus(statusElement, result.message || 'An unknown error occurred.', true);
+            // result.status is 'error' or other
+            showStatus(statusElement, result.message || 'An unknown error occurred from the server.', true);
         }
 
     } catch (error) {
-         console.error(`Error during ${formType} or response handling:`, error);
-         showStatus(statusElement, `Error: ${error.message || 'Could not connect.'}`, true);
+        console.error(`Error during ${formType} or response handling:`, error);
+        showStatus(statusElement, `Client-side error: ${error.message || 'Could not connect or process response.'}`, true);
     } finally {
-         const isSuccessfulSigninRedirect = (formType === 'signin' && result && result.status === 'success');
-         if (!isSuccessfulSigninRedirect) {
-              submitButton.disabled = false;
-         }
+        const isSuccessfulSigninRedirect = (formType === 'signin' && result && result.status === 'success' && result.sessionId);
+        if (!isSuccessfulSigninRedirect && submitButton) { // Check if submitButton exists
+            submitButton.disabled = false;
+        }
     }
-} // --- End of handleFormSubmit Function ---
+}
 
-// --- Event Listeners ---
-signInBtn.addEventListener('click', showSignIn);
-signUpBtn.addEventListener('click', showSignUp);
-actualSignUpForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signup'));
-actualSignInForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signin'));
+// --- Event Listeners (Ensure these elements exist on your login page) ---
+if (signInBtn) signInBtn.addEventListener('click', showSignIn);
+if (signUpBtn) signUpBtn.addEventListener('click', showSignUp);
+if (actualSignUpForm) actualSignUpForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signup'));
+if (actualSignInForm) actualSignInForm.addEventListener('submit', (event) => handleFormSubmit(event, 'signin'));
 
 // --- Initial State ---
+// Call showSignIn() or showSignUp() depending on which form you want to display initially
 showSignIn();
 
-console.log("Login/Signup script loaded (with final role redirect).");
+console.log("Login/Signup script (with session handling for signin) loaded.");
