@@ -15,6 +15,119 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
 
     <link rel="stylesheet" href="style.css">
+    <script>
+        (async function protectPage() {
+            // Hide content by default to prevent flash of unprotected content
+            document.documentElement.style.visibility = 'hidden'; // Hide everything initially
+    
+            const sessionId = localStorage.getItem('myAppSessionId');
+            const storedUserRole = localStorage.getItem('myAppUserRole'); // Role stored by login page
+    
+            // IMPORTANT: Use the SAME URL as in your login page's JavaScript
+            const googleScriptURL = 'https://script.google.com/macros/s/AKfycbx7cXeijOmX5t_wr1FY48s-XCjoiECRc0EN_6CNPZJ8zMUCqSnzdLCuCpsc9cMUXwFx/exec';
+            // IMPORTANT: Set this to the path of your main login HTML file
+            const loginPageURL = 'login.html'; // Or the full path if it's in a different directory
+    
+            function redirectToLogin(reason) {
+                console.warn(reason + ' Redirecting to login page: ' + loginPageURL);
+                localStorage.removeItem('myAppSessionId');
+                localStorage.removeItem('myAppUserRole');
+                localStorage.removeItem('myAppUserFirstName');
+                window.location.href = loginPageURL;
+            }
+    
+            if (!sessionId) {
+                redirectToLogin('No session ID found in local storage.');
+                return; // Stop further execution
+            }
+    
+            // Determine if the current page is intended for admin or general user
+            const currentPagePath = window.location.pathname.toLowerCase();
+            const isAdminPage = currentPagePath.includes('index3_admin.html');
+            const isUserPage = currentPagePath.includes('index2.html'); // General user page
+    
+            // Preliminary client-side role check (enhances UX, but server is the authority)
+            if (isAdminPage && storedUserRole !== 'admin') {
+                // alert('Access Denied: You do not have admin privileges for this page.');
+                // redirectToLogin(`Client-side role check: Role '${storedUserRole}' not authorized for admin page.`);
+                // return; // Let server do the final check, or redirect immediately. For now, let server check.
+            }
+    
+            try {
+                const formData = new URLSearchParams();
+                formData.append('action', 'verifySession');
+                formData.append('sessionId', sessionId);
+    
+                const response = await fetch(googleScriptURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString(),
+                    mode: 'cors'
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Network error during session verification: ${response.status} ${response.statusText}`);
+                }
+    
+                const result = await response.json();
+    
+                if (result.status === 'success' && result.isAuthenticated && result.user) {
+                    console.log('Session verified by server. User:', result.user);
+    
+                    // Authoritative server-side role check
+                    if (isAdminPage && result.user.role !== 'admin') {
+                        alert('Access Denied: You do not have administrative privileges to view this page.');
+                        redirectToLogin(`Server role check: Role '${result.user.role}' not authorized for admin page.`);
+                        return;
+                    }
+                    // If it's a general user page, and an admin is accessing it, that's usually fine.
+                    // If you had specific 'user-only' pages an admin shouldn't see, add that logic here.
+    
+                    // All checks passed, user is authenticated and authorized for this page.
+                    document.documentElement.style.visibility = 'visible'; // Show the page content
+    
+                    // Make user information available (optional)
+                    window.currentUser = result.user;
+                    // Example: if (document.getElementById('welcomeUser')) {
+                    // document.getElementById('welcomeUser').textContent = 'Welcome, ' + result.user.firstName;
+                    // }
+    
+                    // Setup Sign Out Button (assuming you have a button with id="signOutButton")
+                    const signOutButton = document.getElementById('signOutButton');
+                    if (signOutButton) {
+                        signOutButton.style.display = 'inline-block'; // Make it visible
+                        signOutButton.addEventListener('click', async function() {
+                            const currentSessionId = localStorage.getItem('myAppSessionId');
+                            showProcessingMessage('Signing out...'); // Implement this function if you want messages
+                            if (currentSessionId) {
+                                const signoutFormData = new URLSearchParams();
+                                signoutFormData.append('action', 'signout');
+                                signoutFormData.append('sessionId', currentSessionId);
+                                try {
+                                    await fetch(googleScriptURL, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                        body: signoutFormData.toString(),
+                                        mode: 'cors'
+                                    });
+                                } catch (err) {
+                                    console.error("Error during signout request, but redirecting anyway:", err);
+                                }
+                            }
+                            redirectToLogin('User signed out.');
+                        });
+                    }
+                } else {
+                    // Session not valid according to server
+                    redirectToLogin(`Server session verification failed: ${result.message || 'Invalid session.'}`);
+                }
+            } catch (error) {
+                // Catch fetch errors or other JS errors in this block
+                redirectToLogin(`Client-side error during session verification: ${error.message}`);
+            }
+        })();
+
+    </script>
 </head>
 
 <body>
