@@ -186,6 +186,7 @@ ul {
   line-height: 30px;
   text-align: center;
   border-radius: 50%;
+
 }
 
 .social_icone ul li a:hover {
@@ -705,7 +706,7 @@ display: block; /* Show on hover */
 }
 
 .slider_black .slider_content h1 {
-  color: #fff;
+  color: #ffffff;
   font-weight: 400;
   margin-bottom: 10px;
   font-family: "Baloo 2", serif;
@@ -937,17 +938,11 @@ display: block; /* Show on hover */
 /* === START: Corrected Product CSS Code === */
 
 
-/* --- Add this block to your existing CSS for Responsive Product Tabs --- */
+
 
 @media (max-width: 768px) { /* Apply styles for screens 768px wide or smaller */
 
-  .product_tab_button ul.nav {
-      display: flex;         /* Use flexbox for better control */
-      flex-wrap: wrap;       /* Allow items to wrap to the next line */
-      justify-content: center; /* Center the wrapped items */
-      border: none;          /* Remove the main border */
-      padding: 0 10px;       /* Add some horizontal padding */
-  }
+  
 
   /* Hide the decorative side lines on small screens */
   .product_tab_button ul.nav::before,
@@ -1014,16 +1009,7 @@ display: block; /* Show on hover */
   margin-bottom: 34px;
 }
 
-.product_black_section .product_tab_button ul.nav {
-  border: 2px solid #2d2d2d;
-}
 
-.product_black_section .product_tab_button ul.nav::before {
-  background-image: linear-gradient(to right, transparent, #2d2d2d);
-}
-.product_black_section .product_tab_button ul.nav::after {
-  background-image: linear-gradient(to right, #2d2d2d, transparent);
-}
 .product_black_section .product_tab_button ul.nav li:first-child a {
   border-left: 0;
 }
@@ -1050,14 +1036,6 @@ display: block; /* Show on hover */
   text-align: center;
 }
 
-/* Style for the tab buttons themselves if needed */
-/*
-.product_tab_button ul {
-  justify-content: center;
-  margin: 0 auto;
-  border: 2px solid #ebebeb;  <-- Light theme border? Might conflict with .nav below
-}
-*/
 
 .product_tab_button ul.nav {
   display: inline-block;
@@ -1067,19 +1045,19 @@ display: block; /* Show on hover */
 
 .product_tab_button ul.nav::before {
   content: "";
-  width: 200px;
+  width: 15px;
   height: 2px;
   position: absolute;
-  right: 100%;
+  right: 50%;
   top: 50%;
   background-image: linear-gradient(to right, transparent, #2d2d2d);
 }
 .product_tab_button ul.nav::after {
   content: "";
-  width: 200px;
+  width: 20px;
   height: 2px;
   position: absolute;
-  left: 100%;
+  left: 50%;
   top: 50%;
   background-image: linear-gradient(to right, #2d2d2d, transparent); /* Corrected direction */
 }
