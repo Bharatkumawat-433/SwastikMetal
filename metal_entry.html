@@ -1,4 +1,499 @@
+<!-- new 13.56  13-05-2025 -->
+
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Multiple Metal Prices</title>
+    <link rel="shortcut icon" href="SM_logo.png" type="image/x-icon"> <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Enhanced Metal Entry Form Styles (v3: Hot/Dark Theme) --- */
+
+        /* --- Variables (Dark Theme with Fiery Accents) --- */
+        :root {
+            /* Accent Colors */
+            --accent-primary: #ff8c00; /* Dark Orange */
+            --accent-secondary: #ffae42; /* Amber */
+            --accent-hover: #ffa500; /* Brighter Orange */
+            --focus-glow: rgba(255, 140, 0, 0.25); /* Orange glow for focus */
+
+            /* Background Colors */
+            --bg-main-start: #1a1a1a; /* Very Dark Grey/Black */
+            --bg-main-end: #2b2b2b;   /* Dark Grey */
+            --bg-container: #2f2f2f; /* Slightly lighter container */
+            --input-bg: #383838; /* Darker input background */
+            --input-focus-bg: #404040;
+
+            /* Text Colors */
+            --text-light: #e0e0e0; /* Light grey for text */
+            --text-medium: #b0b0b0; /* Medium grey */
+            --text-placeholder: #777; /* Placeholder text */
+            --text-heading: var(--accent-secondary); /* Amber for headings */
+            --text-label: var(--text-medium);
+            --text-button: #ffffff;
+
+            /* Status Colors */
+            --success-text: #c3e6cb;
+            --success-bg: rgba(40, 167, 69, 0.25);
+            --success-border: rgba(40, 167, 69, 0.6);
+            --error-text: #f5c6cb;
+            --error-bg: rgba(220, 53, 69, 0.25);
+            --error-border: rgba(220, 53, 69, 0.6);
+
+
+            /* Border & Shadow */
+            --border-color: #444; /* Dark border */
+            --border-focus: var(--accent-primary); /* Orange focus border */
+            --shadow-color: rgba(0, 0, 0, 0.4); /* Darker shadow base */
+            --shadow-color-light: rgba(0, 0, 0, 0.6);
+
+            /* Other */
+            --font-family: 'Poppins', sans-serif;
+            --transition-speed: 0.3s;
+            --container-radius: 15px;
+            --input-radius: 10px;
+            --button-radius: 50px; /* Pill shape */
+        }
+
+        /* --- General Reset & Body --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-main-end); /* Fallback */
+            background-image: linear-gradient(135deg, var(--bg-main-start) 0%, var(--bg-main-end) 100%);
+            color: var(--text-light); /* Default text is light */
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+            transition: background-color var(--transition-speed) ease;
+        }
+
+        /* --- Container --- */
+        .container {
+            background: var(--bg-container);
+            max-width: 700px; /* Adjusted for potentially more content */
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 50px; /* Generous padding */
+            border-radius: var(--container-radius);
+            box-shadow: 0 12px 40px var(--shadow-color); /* More prominent shadow */
+            border: 1px solid var(--border-color);
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+            overflow: hidden;
+        }
+
+        /* Container hover */
+        .container:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px var(--shadow-color-light);
+        }
+
+        /* --- Heading --- */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px; /* Adjusted margin */
+            color: var(--text-heading);
+            font-weight: 700;
+            font-size: 2rem;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+            transition: color var(--transition-speed) ease, text-shadow var(--transition-speed) ease;
+        }
+        .container:hover h1 {
+            color: var(--accent-hover);
+            text-shadow: 0 0 10px var(--accent-primary); /* Add glow on hover */
+        }
+        
+        h2 { /* Style for "Metal Entries" subheading */
+            text-align: center;
+            color: var(--text-heading);
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+
+        /* --- Form --- */
+        #metalForm {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Spacing between inputs/groups */
+        }
+
+        /* --- Input Groups & Labels --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 5px; /* Reduced gap as main form has gap */
+        }
+
+        label {
+            font-weight: 500;
+            margin-bottom: 8px; /* More space */
+            color: var(--text-label);
+            font-size: 0.9rem;
+            display: block;
+            transition: color var(--transition-speed) ease;
+        }
+
+        /* --- Input Fields --- */
+        input[type="text"],
+        input[type="number"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 20px; /* Comfortable padding */
+            border: 1px solid var(--border-color);
+            border-radius: var(--input-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: var(--input-bg);
+            transition: border-color var(--transition-speed) ease,
+                        box-shadow var(--transition-speed) ease,
+                        background-color var(--transition-speed) ease;
+            color: var(--text-light); /* Light text in inputs */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset; /* Inner shadow */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield; /* For number input spinners */
+        }
+
+        /* Input Placeholder Style */
+        input::placeholder {
+            color: var(--text-placeholder);
+            opacity: 1;
+            transition: opacity var(--transition-speed) ease;
+        }
+        input:focus::placeholder {
+            opacity: 0.6;
+        }
+
+        /* Input Focus State */
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="tel"]:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--input-focus-bg); /* Slightly lighter bg on focus */
+            box-shadow: 0 0 0 4px var(--focus-glow), /* Orange glow */
+                        0 1px 3px rgba(0,0,0,0.2) inset;
+        }
+
+        /* --- Submit Button --- */
+        #submitButton {
+            padding: 14px 35px; /* Adjusted padding */
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-button);
+            /* Fiery gradient */
+            background-image: linear-gradient(to right, var(--accent-secondary) 0%, var(--accent-primary) 51%, var(--accent-secondary) 100%);
+            background-size: 200% auto;
+            border: none;
+            border-radius: var(--button-radius); /* Pill shape */
+            cursor: pointer;
+            transition: all 0.4s ease; /* Smooth all transitions */
+            align-self: center;
+            width: auto;
+            min-width: 200px;
+            margin-top: 20px; /* Space above button */
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3); /* Orange shadow */
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Button hover */
+        #submitButton:hover {
+            background-position: right center; /* Change gradient direction */
+            box-shadow: 0 10px 25px rgba(255, 140, 0, 0.45);
+            transform: translateY(-3px);
+        }
+
+        /* Button active */
+        #submitButton:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        /* Button disabled */
+        #submitButton:disabled {
+            background-image: none;
+            background-color: #555; /* Dark grey disabled */
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transform: none;
+        }
+
+        /* --- Status Message (Dark Theme) --- */
+        .status-message {
+            text-align: left; /* Changed for multiple lines */
+            margin-top: 20px;
+            font-weight: 500;
+            min-height: 1.5em;
+            padding: 12px 18px;
+            border-radius: var(--input-radius); /* Match input radius */
+            font-size: 0.90rem; /* Slightly smaller for more text */
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out 0.1s, transform 0.4s ease-in-out 0.1s, box-shadow 0.3s ease;
+            transform: translateY(5px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Slightly stronger shadow */
+            max-height: 200px; /* Max height for status box */
+            overflow-y: auto; /* Scroll if too many messages */
+        }
+        .status-message div { /* Style for individual lines in status */
+            padding: 3px 0;
+        }
+
+
+        .status-message.success,
+        .status-message.error {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-message.success {
+            color: var(--success-text);
+            background-color: var(--success-bg);
+            border-color: var(--success-border);
+        }
+        .status-message.error {
+            color: var(--error-text);
+            background-color: var(--error-bg);
+            border-color: var(--error-border);
+        }
+        
+        /* --- Horizontal Rule --- */
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border-color);
+            margin: 25px 0;
+        }
+
+        /* --- Styles for Dynamic Metal Entries --- */
+        .metal-entry-pair {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #4a4a4a; /* Slightly different border for pair */
+            border-radius: var(--input-radius);
+            margin-bottom: 15px;
+            background-color: rgba(0,0,0,0.05); 
+            position: relative; 
+        }
+
+        .metal-entry-pair .input-group {
+            flex: 1; 
+            min-width: calc(50% - 30px); /* Adjust for gap, aim for 2 per row */
+            margin-bottom: 0; /* Handled by pair's margin */
+        }
+        
+        .metal-entry-pair .input-group:last-child:not(:first-child) { /* For the remove button's container div */
+             min-width: auto; /* Allow remove button to take less space */
+             flex-grow: 0;
+        }
+
+
+        .metal-entry-pair label {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .control-button { /* General style for Add/Remove buttons */
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-button);
+            background-image: linear-gradient(to right, var(--accent-secondary) 0%, var(--accent-primary) 51%, var(--accent-secondary) 100%);
+            background-size: 200% auto;
+            border: none;
+            border-radius: var(--input-radius); 
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block; 
+            width: fit-content; 
+            margin: 10px auto 10px auto; 
+            box-shadow: 0 3px 8px rgba(255, 140, 0, 0.2);
+        }
+
+        .control-button:hover {
+            background-position: right center;
+            box-shadow: 0 5px 12px rgba(255, 140, 0, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .remove-metal-button {
+            background-image: none;
+            background-color: #626970; 
+            color: #fff;
+            padding: 8px 15px; 
+            font-size: 0.85rem;
+            margin-top: 25px; /* Align with input field when label is present */
+            align-self: flex-end; /* Aligns button to bottom of flex item if wrapped */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            min-width: 80px; /* Ensure decent width */
+        }
+        
+        /* Container for remove button to help with alignment */
+        .remove-button-container {
+            display: flex;
+            align-items: flex-end; /* Align button to bottom, useful if input heights vary slightly */
+            flex-basis: 100px; /* Give it some base width, adjust as needed */
+            flex-grow: 0;
+        }
+
+
+        .remove-metal-button:hover {
+            background-color: #c82333; /* Bootstrap's danger color */
+            box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
+        }
+
+        #addMetalPairButton {
+            margin-bottom: 20px; 
+            margin-top: 5px;
+        }
+
+
+        /* --- Responsiveness --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 30px;
+                margin-top: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+             h2 {
+                font-size: 1.3rem;
+            }
+            #submitButton {
+                width: 100%; /* Full width button */
+            }
+            .metal-entry-pair .input-group {
+                min-width: 100%; /* Stack metal name and price on small screens */
+            }
+            .remove-button-container {
+                width: 100%;
+                justify-content: center; /* Center remove button when stacked */
+            }
+            .remove-metal-button {
+                 margin-top: 10px; /* Adjust margin when stacked */
+                 width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 10px;
+            }
+            .container {
+                padding: 25px 20px;
+                border-radius: 12px;
+            }
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 25px;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            #metalForm {
+                gap: 18px;
+            }
+            input[type="text"],
+            input[type="number"],
+            input[type="tel"] {
+                padding: 12px 15px;
+                border-radius: 8px;
+            }
+            #submitButton {
+                padding: 13px 20px;
+                font-size: 1rem;
+            }
+            .status-message {
+                font-size: 0.85rem;
+                padding: 10px 15px;
+            }
+            .control-button {
+                width: 100%;
+                font-size: 0.95rem;
+            }
+             .metal-entry-pair {
+                padding: 10px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter New Metal Prices</h1>
+        <form id="metalForm">
+            <div class="input-group">
+                <label for="userName">Name :</label>
+                <input type="text" id="userName" name="userName" placeholder="Enter your full name" required>
+            </div>
+            <div class="input-group">
+                <label for="phoneInput">Mobile no.:</label>
+                <input id="phoneInput" name="phone" type="tel" placeholder="Enter 10-digit mobile number" pattern="\d{10}" title="Please enter exactly 10 digits" required>
+            </div>
+            <div class="input-group">
+                <label for="cityInput">City:</label>
+                <input id="cityInput" name="city" type="text" placeholder="Enter city name" required>
+            </div>
+
+            <hr>
+
+            <h2>Metal Entries</h2>
+            <div id="metalEntriesContainer">
+                </div>
+
+            <button type="button" id="addMetalPairButton" class="control-button add-metal-button">Add Another Metal</button>
+
+            <hr>
+
+            <button type="submit" id="submitButton">Submit All Prices</button>
+            <p id="statusMessage" class="status-message"></p>
+        </form>
+    </div>
+    <script src="metal_entry.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -337,4 +832,7 @@
 
     <script src="metal_entry.js"></script>
 </body>
-</html>
+</html> -->
+
+
+
