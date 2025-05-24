@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GST Calculator (₹)</title>
+    <link rel="shortcut icon" href="SM_logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .calculator-container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .calculator-container:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            display: inline-block;
+            width: calc(100% - 20px); /* Adjust width */
+            text-align: center;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        #invoice-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-bottom: 25px;
+        }
+
+        #invoice-table th,
+        #invoice-table td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        #invoice-table th {
+            background-color: #007bff;
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        #invoice-table th:first-child { border-top-left-radius: 8px; }
+        #invoice-table th:last-child { border-top-right-radius: 8px; }
+
+        #invoice-table tbody tr {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #invoice-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        #invoice-table td:first-child { border-bottom-left-radius: 8px; border-top-left-radius: 8px; }
+        #invoice-table td:last-child { border-bottom-right-radius: 8px; border-top-right-radius: 8px; }
+
+        #invoice-table input[type="text"],
+        #invoice-table input[type="number"] {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+            max-width: 150px;
+        }
+
+        #invoice-table input[type="text"] {
+             max-width: 200px;
+        }
+
+        #invoice-table input[type="text"]:focus,
+        #invoice-table input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .row-total {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 1.1em;
+        }
+
+        .remove-row-btn,
+        #add-row-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            color: #fff;
+        }
+
+        .remove-row-btn {
+            background-color: #dc3545;
+        }
+
+        .remove-row-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        #add-row-btn {
+            background-color: #28a745;
+            display: block;
+            margin: 20px auto;
+            font-size: 1em;
+            padding: 12px 25px;
+        }
+
+        #add-row-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .summary-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e0e0;
+            width: 50%;
+            margin-left: auto;
+            text-align: right;
+            min-width: 300px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* Align items vertically */
+            padding: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .summary-row span:first-child {
+            color: #555;
+            margin-right: 20px;
+        }
+
+        .summary-row span:last-child {
+            font-weight: 600;
+            min-width: 100px;
+            display: inline-block;
+            text-align: right;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 10px 0;
+        }
+
+        .grand-total span {
+            font-size: 1.3em;
+            color: #007bff;
+            font-weight: 700 !important;
+        }
+
+        /* GST Toggle Switch Styles */
+        .gst-toggle {
+            display: flex;
+            justify-content: flex-end; /* Align to the right */
+            align-items: center;
+            margin-bottom: 10px;
+            padding-right: 0; /* Match summary row alignment */
+        }
+
+        .gst-toggle label {
+            margin-right: 10px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px; /* Reduced size */
+            height: 28px; /* Reduced size */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px; /* Keep it round */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; /* Reduced size */
+            width: 20px; /* Reduced size */
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #28a745;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px); /* Adjusted distance */
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .calculator-container { padding: 20px 15px; }
+            #invoice-table { display: block; overflow-x: auto; white-space: nowrap; }
+            #invoice-table thead, #invoice-table tbody, #invoice-table tr { display: inline-block; }
+            #invoice-table th { display: none; }
+            #invoice-table tr { display: block; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; }
+            #invoice-table td { display: flex; justify-content: space-between; align-items: center; text-align: right; border-bottom: 1px solid #eee; position: relative; padding: 10px 15px; padding-left: 50%; white-space: normal; }
+            #invoice-table td:last-child { border-bottom: 0; }
+            #invoice-table td:before { content: attr(data-label); position: absolute; left: 10px; width: 45%; padding-right: 10px; white-space: nowrap; text-align: left; font-weight: bold; color: #555; }
+            #invoice-table input[type="text"], #invoice-table input[type="number"] { width: 100%; box-sizing: border-box; max-width: none; }
+            .summary-section { width: 100%; margin-left: 0; min-width: auto; padding-right: 10px; /* Add some padding */ box-sizing: border-box; }
+            .gst-toggle { justify-content: space-between; padding-right: 10px; }
+        }
+
+        @media (max-width: 480px) {
+             h1 { font-size: 1.5em; }
+             .summary-row { font-size: 1em; }
+             .grand-total span { font-size: 1.15em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-container">
+        <h1>GST Calculator</h1>
+        <table id="invoice-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Row Total (₹)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr>
+                    <td data-label="Item"><input type="text" class="item-input" placeholder="Enter Item Name"></td>
+                    <td data-label="Quantity"><input type="number" class="quantity-input" placeholder="0" min="0"></td>
+                    <td data-label="Price (₹)"><input type="number" class="price-input" placeholder="0.00" min="0" step="0.01"></td>
+                    <td data-label="Row Total (₹)"><span class="row-total">0.00</span></td>
+                    <td data-label="Action"><button class="remove-row-btn">Remove</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button id="add-row-btn">Add New Item</button>
+
+        <div class="summary-section">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="subtotal">₹0.00</span>
+            </div>
+             <div class="gst-toggle">
+                <label for="gst-checkbox">Include GST (18%)?</label>
+                <label class="switch">
+                    <input type="checkbox" id="gst-checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="summary-row">
+                <span>GST (18%):</span>
+                <span id="gst">₹0.00</span>
+            </div>
+            <hr>
+            <div class="summary-row grand-total">
+                <span>Grand Total:</span>
+                <span id="grand-total">₹0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.getElementById('table-body');
+            const addRowBtn = document.getElementById('add-row-btn');
+            const subtotalEl = document.getElementById('subtotal');
+            const gstEl = document.getElementById('gst');
+            const grandTotalEl = document.getElementById('grand-total');
+            const gstCheckbox = document.getElementById('gst-checkbox');
+
+            const GST_RATE = 0.18;
+
+            const createNewRow = () => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td data-label="Item"><input type="text" class="item-input" placeholder="Enter Item Name"></td>
+                    <td data-label="Quantity"><input type="number" class="quantity-input" placeholder="0" min="0"></td>
+                    <td data-label="Price (₹)"><input type="number" class="price-input" placeholder="0.00" min="0" step="0.01"></td>
+                    <td data-label="Row Total (₹)"><span class="row-total">0.00</span></td>
+                    <td data-label="Action"><button class="remove-row-btn">Remove</button></td>
+                `;
+                tableBody.appendChild(row);
+            };
+
+            const calculateRowTotal = (row) => {
+                const quantityInput = row.querySelector('.quantity-input');
+                const priceInput = row.querySelector('.price-input');
+                const rowTotalSpan = row.querySelector('.row-total');
+
+                const quantity = parseFloat(quantityInput.value) || 0;
+                const price = parseFloat(priceInput.value) || 0;
+                const total = quantity * price;
+
+                rowTotalSpan.textContent = total.toFixed(2);
+                updateTotals();
+            };
+
+            const updateTotals = () => {
+                let subtotal = 0;
+                document.querySelectorAll('.row-total').forEach(span => {
+                    subtotal += parseFloat(span.textContent);
+                });
+
+                const gst = subtotal * GST_RATE;
+                let grandTotal = subtotal;
+
+                if (gstCheckbox.checked) {
+                    grandTotal += gst;
+                    gstEl.textContent = `₹${gst.toFixed(2)}`; // Use ₹
+                } else {
+                    gstEl.textContent = `₹0.00`; // Use ₹
+                }
+
+                subtotalEl.textContent = `₹${subtotal.toFixed(2)}`; // Use ₹
+                grandTotalEl.textContent = `₹${grandTotal.toFixed(2)}`; // Use ₹
+            };
+
+            const removeRow = (button) => {
+                const row = button.closest('tr');
+                if (tableBody.querySelectorAll('tr').length > 1) {
+                    row.remove();
+                    updateTotals();
+                } else {
+                    alert("You must have at least one item.");
+                    const inputs = row.querySelectorAll('input');
+                    inputs.forEach(input => input.value = (input.type === 'text') ? '' : '0');
+                    calculateRowTotal(row);
+                }
+            };
+
+            addRowBtn.addEventListener('click', createNewRow);
+
+            tableBody.addEventListener('input', (event) => {
+                if (event.target.classList.contains('quantity-input') || event.target.classList.contains('price-input')) {
+                    calculateRowTotal(event.target.closest('tr'));
+                }
+            });
+
+            tableBody.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-row-btn')) {
+                    removeRow(event.target);
+                }
+            });
+
+            gstCheckbox.addEventListener('change', updateTotals);
+
+            document.querySelectorAll('#table-body tr').forEach(calculateRowTotal);
+            updateTotals();
+        });
+    </script>
+
+</body>
+</html>
